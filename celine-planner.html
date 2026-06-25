@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celine's Daily Planner</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎀</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF9F5;--surface:#FFFFFF;--border:#F0E8E0;--text:#2D2016;--muted:#8C7B6E;
+  --prayer:#F59E0B;--prayer-bg:#FFFBEB;--prayer-bd:#FDE68A;
+  --work:#3B82F6;--work-bg:#EFF6FF;--work-bd:#BFDBFE;
+  --threads:#10B981;--threads-bg:#ECFDF5;--threads-bd:#A7F3D0;
+  --wa:#22C55E;--wa-bg:#F0FDF4;--wa-bd:#BBF7D0;
+  --lang:#8B5CF6;--lang-bg:#F5F3FF;--lang-bd:#DDD6FE;
+  --sport:#F97316;--sport-bg:#FFF7ED;--sport-bd:#FED7AA;
+  --port:#14B8A6;--port-bg:#F0FDFA;--port-bd:#99F6E4;
+  --job:#EF4444;--job-bg:#FEF2F2;--job-bd:#FECACA;
+  --meal:#EC4899;--meal-bg:#FDF2F8;--meal-bd:#FBCFE8;
+  --rest:#6B7280;--rest-bg:#F9FAFB;--rest-bd:#E5E7EB;
+  --prepare:#D97706;--prepare-bg:#FFFBEB;--prepare-bd:#FCD34D;
+  --r:12px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+h1,h2,h3,h4{font-family:'Nunito',sans-serif;}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:4px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+.nav-brand{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;color:var(--text);padding:13px 0;margin-right:16px;white-space:nowrap;}
+.nav-brand span{color:var(--sport);}
+.nav-tabs{display:flex;gap:3px;flex-wrap:wrap;}
+.nav-tab{padding:9px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--muted);transition:all .15s;white-space:nowrap;font-family:'Nunito',sans-serif;}
+.nav-tab:hover{background:var(--bg);color:var(--text);}
+.nav-tab.active{background:var(--text);color:#fff;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.btn-sync{padding:7px 13px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;font-family:'Nunito',sans-serif;}
+.btn-sync:hover{border-color:var(--text);color:var(--text);}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#D1D5DB;display:inline-block;margin-right:5px;transition:background .3s;}
+.sync-dot.ok{background:#10B981;}.sync-dot.err{background:#EF4444;}
+
+/* PAGES */
+.page{display:none;padding:20px;max-width:900px;margin:0 auto;}
+.page.active{display:block;}
+
+/* DATE NAV */
+.date-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.date-display{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;}
+.date-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.date-nav{display:flex;align-items:center;gap:8px;}
+.btn-arrow{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;}
+.btn-arrow:hover{border-color:var(--text);}
+.btn-today{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.btn-today:hover{background:var(--text);color:#fff;border-color:var(--text);}
+
+/* SCHEDULE */
+.sched-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.btn-add-block{padding:7px 14px;border-radius:var(--rs);border:1.5px dashed var(--border);background:none;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);font-family:'Nunito',sans-serif;transition:all .15s;}
+.btn-add-block:hover{border-color:var(--sport);color:var(--sport);}
+.edit-hint{font-size:11px;color:var(--muted);}
+.legend-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.leg{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);font-weight:600;}
+.leg-dot{width:7px;height:7px;border-radius:50%;}
+.sched-list{display:flex;flex-direction:column;gap:3px;}
+.sched-block{display:flex;gap:9px;align-items:stretch;position:relative;}
+.sched-block.dragging{opacity:.4;}
+.sched-block.drag-over>.sched-card{border-top:2px solid var(--sport)!important;}
+.s-time{width:44px;font-size:11px;color:var(--muted);padding-top:11px;flex-shrink:0;text-align:right;font-weight:600;}
+.s-conn{display:flex;flex-direction:column;align-items:center;width:13px;flex-shrink:0;}
+.s-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:12px;}
+.s-line{width:1.5px;flex:1;background:var(--border);margin-top:2px;}
+.sched-card{flex:1;border-radius:var(--rs);padding:8px 11px;border:1px solid transparent;margin-bottom:3px;cursor:grab;transition:box-shadow .15s;}
+.sched-card:active{cursor:grabbing;}
+.sched-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.sc-title{font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;}
+.sc-sub{font-size:11px;margin-top:2px;opacity:.75;}
+.sc-badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;margin-top:4px;}
+.sc-actions{display:none;gap:5px;margin-top:6px;}
+.sched-card:hover .sc-actions{display:flex;}
+.sc-btn{padding:3px 9px;border-radius:6px;border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.7);font-size:11px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.sc-btn:hover{background:#fff;}
+.sc-btn.del{color:#EF4444;}
+
+/* cat colors */
+.cat-prayer{background:var(--prayer-bg);border-color:var(--prayer-bd)!important;} .cat-prayer .sc-title{color:#92400E;} .cat-prayer .sc-sub{color:#B45309;} .cat-prayer .s-dot{background:var(--prayer);}
+.cat-work{background:var(--work-bg);border-color:var(--work-bd)!important;} .cat-work .sc-title{color:#1E3A8A;} .cat-work .sc-sub{color:#1D4ED8;} .cat-work .s-dot{background:var(--work);}
+.cat-ps-threads{background:var(--threads-bg);border-color:var(--threads-bd)!important;} .cat-ps-threads .sc-title{color:#065F46;} .cat-ps-threads .s-dot{background:var(--threads);}
+.cat-ps-wa{background:var(--wa-bg);border-color:var(--wa-bd)!important;} .cat-ps-wa .sc-title{color:#14532D;} .cat-ps-wa .s-dot{background:var(--wa);}
+.cat-lang{background:var(--lang-bg);border-color:var(--lang-bd)!important;} .cat-lang .sc-title{color:#4C1D95;} .cat-lang .s-dot{background:var(--lang);}
+.cat-sport{background:var(--sport-bg);border-color:var(--sport-bd)!important;} .cat-sport .sc-title{color:#7C2D12;} .cat-sport .s-dot{background:var(--sport);}
+.cat-port{background:var(--port-bg);border-color:var(--port-bd)!important;} .cat-port .sc-title{color:#134E4A;} .cat-port .s-dot{background:var(--port);}
+.cat-job{background:var(--job-bg);border-color:var(--job-bd)!important;} .cat-job .sc-title{color:#7F1D1D;} .cat-job .s-dot{background:var(--job);}
+.cat-meal{background:var(--meal-bg);border-color:var(--meal-bd)!important;} .cat-meal .sc-title{color:#831843;} .cat-meal .s-dot{background:var(--meal);}
+.cat-rest{background:var(--rest-bg);border-color:var(--rest-bd)!important;} .cat-rest .sc-title{color:#1F2937;} .cat-rest .s-dot{background:var(--rest);}
+.cat-prepare{background:var(--prepare-bg);border-color:var(--prepare-bd)!important;} .cat-prepare .sc-title{color:#78350F;} .cat-prepare .s-dot{background:var(--prepare);}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:var(--r);padding:24px;width:90%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+.modal h3{font-size:16px;font-weight:800;margin-bottom:16px;}
+.field{margin-bottom:12px;}
+.field label{font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 11px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);transition:border-color .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--sport);}
+.modal-btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;}
+.btn-cancel{padding:8px 16px;border-radius:var(--rs);border:1.5px solid var(--border);background:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;}
+.btn-ok{padding:8px 20px;border-radius:var(--rs);border:none;background:var(--text);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* JOURNAL */
+.jgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.jcard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;}
+.jcard.full{grid-column:1/-1;}
+.jlabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.jlabel .jdot{width:7px;height:7px;border-radius:50%;}
+.jtextarea{width:100%;border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);resize:vertical;min-height:80px;line-height:1.6;}
+.jtextarea:focus{outline:none;border-color:var(--sport);}
+.jtextarea::placeholder{color:#C4B5A8;}
+.mood-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;}
+.mood-btn{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;transition:all .15s;}
+.mood-btn.sel{background:var(--sport);border-color:var(--sport);color:#fff;}
+.grat-list{display:flex;flex-direction:column;gap:6px;}
+.grat-item{display:flex;align-items:center;gap:7px;}
+.grat-num{width:19px;height:19px;border-radius:50%;background:var(--prayer-bg);color:var(--prepare);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.grat-item input{flex:1;border:1.5px solid var(--border);border-radius:var(--rs);padding:7px 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
+.grat-item input:focus{outline:none;border-color:var(--prayer);}
+.btn-save{width:100%;padding:11px;border-radius:var(--rs);border:none;background:var(--text);color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;margin-top:14px;}
+.btn-save:hover{opacity:.85;}
+.save-msg{text-align:center;font-size:12px;color:var(--threads);font-weight:600;margin-top:7px;opacity:0;transition:opacity .3s;}
+.save-msg.show{opacity:1;}
+
+/* HABIT */
+.streak-banner{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border:1.5px solid var(--prayer-bd);border-radius:var(--r);padding:13px 17px;display:flex;align-items:center;gap:13px;margin-bottom:14px;}
+.streak-num{font-family:'Nunito',sans-serif;font-size:30px;font-weight:800;color:var(--prayer);line-height:1;}
+.streak-lbl{font-size:13px;font-weight:600;color:#92400E;}
+.streak-sub{font-size:11px;color:#B45309;margin-top:2px;}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:18px;}
+.wday{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:7px 5px;text-align:center;cursor:pointer;transition:all .15s;}
+.wday:hover{border-color:var(--sport);}
+.wday.today{border-color:var(--sport);background:var(--sport-bg);}
+.wday.sel{border-color:var(--text);background:var(--bg);}
+.wday .wdn{font-size:10px;font-weight:700;color:var(--muted);}
+.wday .wdd{font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;margin:2px 0;}
+.wday .wdbar{height:4px;border-radius:2px;background:var(--border);margin-top:3px;overflow:hidden;}
+.wday .wdfill{height:100%;background:var(--sport);border-radius:2px;transition:width .4s;}
+.hsec-title{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin:18px 0 9px;}
+.hgrid{display:flex;flex-direction:column;gap:5px;}
+.hrow{display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 13px;gap:9px;transition:all .15s;}
+.hrow.done{border-color:transparent;}
+.hicon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.hname{font-size:13px;font-weight:600;flex:1;}
+.hsub{font-size:11px;color:var(--muted);margin-top:1px;}
+.hchk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:all .2s;}
+.hchk.checked{background:var(--text);border-color:var(--text);color:#fff;}
+
+/* LANGUAGE */
+.lang-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.lang-tab{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;background:var(--surface);color:var(--muted);transition:all .15s;}
+.lang-tab.active{background:var(--lang);border-color:var(--lang);color:#fff;}
+.lang-header{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:16px;}
+.lang-header h3{font-size:16px;font-weight:800;margin-bottom:4px;}
+.lang-header p{font-size:13px;color:var(--muted);}
+.lang-week{display:flex;gap:5px;margin-bottom:16px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}
+.lang-week-btn{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;background:var(--surface);color:var(--muted);white-space:nowrap;transition:all .15s;}
+.lang-week-btn.active{background:var(--lang-bg);border-color:var(--lang);color:#4C1D95;}
+.day-cards{display:flex;flex-direction:column;gap:8px;}
+.day-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;gap:14px;align-items:flex-start;transition:all .15s;}
+.day-card:hover{border-color:#D1C4B8;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.day-card.done-card{background:var(--lang-bg);border-color:var(--lang-bd);}
+.dc-num{width:36px;height:36px;border-radius:10px;background:var(--lang-bg);color:#4C1D95;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.done-card .dc-num{background:var(--lang);color:#fff;}
+.dc-body{flex:1;}
+.dc-day{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.dc-topic{font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;color:var(--text);margin-bottom:4px;}
+.dc-focus{font-size:12px;color:var(--muted);line-height:1.5;}
+.dc-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--lang-bg);color:#4C1D95;margin-top:5px;}
+.dc-check{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:4px;transition:all .2s;}
+.dc-check.checked{background:var(--lang);border-color:var(--lang);color:#fff;}
+
+/* TIMER */
+.timer-bar{background:var(--surface);border:1.5px solid var(--lang-bd);border-radius:var(--r);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.timer-face{font-family:'Nunito',sans-serif;font-size:36px;font-weight:800;color:var(--lang);min-width:90px;letter-spacing:2px;}
+.timer-face.running{color:#EF4444;}
+.timer-face.done{color:#10B981;}
+.timer-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.tbtn{padding:7px 14px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.tbtn:hover{border-color:var(--lang);color:var(--lang);}
+.tbtn.primary{background:var(--lang);border-color:var(--lang);color:#fff;}
+.tbtn.primary:hover{opacity:.88;}
+.tbtn.danger{border-color:#FECACA;color:#EF4444;}
+.tbtn.danger:hover{background:#FEF2F2;}
+.timer-presets{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap;}
+.tpreset{padding:5px 10px;border-radius:20px;border:1.5px solid var(--border);background:none;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted);font-family:'Nunito',sans-serif;transition:all .15s;}
+.tpreset:hover,.tpreset.sel{background:var(--lang-bg);border-color:var(--lang);color:#4C1D95;}
+.timer-lbl{font-size:12px;color:var(--muted);font-weight:600;}
+.timer-progress{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;width:100%;}
+.timer-fill{height:100%;background:var(--lang);border-radius:2px;transition:width .9s linear;}
+
+/* LANG EDIT */
+.dc-actions{display:none;gap:5px;margin-top:7px;}
+.day-card:hover .dc-actions{display:flex;}
+.dc-btn{padding:3px 9px;border-radius:6px;border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.8);font-size:11px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.dc-btn:hover{background:#fff;border-color:var(--lang);}
+
+/* REMINDER POPUP */
+.reminder-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center;}
+.reminder-overlay.open{display:flex;}
+.reminder-box{background:var(--surface);border-radius:var(--r);padding:28px 26px;width:90%;max-width:380px;box-shadow:0 24px 60px rgba(0,0,0,.18);text-align:center;animation:popIn .25s ease;}
+@keyframes popIn{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+.rem-icon{font-size:40px;margin-bottom:12px;}
+.rem-time{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;}
+.rem-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.rem-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5;}
+.rem-btn{padding:10px 28px;border-radius:var(--rs);border:none;background:var(--text);color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;width:100%;}
+.rem-btn:hover{opacity:.85;}
+.rem-snooze{display:block;margin-top:10px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Nunito',sans-serif;}
+.rem-snooze:hover{color:var(--text);}
+
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-month-label{font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;}
+.cal-legend-row{font-size:12px;color:var(--muted);margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dh{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:4px 0;}
+.cal-cell{min-height:52px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);padding:5px 6px;cursor:pointer;transition:all .15s;position:relative;}
+.cal-cell:hover{border-color:var(--sport);box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default;}
+.cal-cell.cal-today{border-color:var(--sport);background:var(--sport-bg);}
+.cal-num{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;}
+.cal-today .cal-num{color:var(--sport);}
+.cal-dots{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.cdot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+
+/* BRAINSTORM */
+.bs-section{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.bs-section h3{font-size:15px;font-weight:800;margin-bottom:14px;}
+.bs-goal-item{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.bs-goal-num{width:22px;height:22px;border-radius:50%;background:var(--lang-bg);color:var(--lang);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bs-goal-input{flex:1;border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 11px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
+.bs-goal-input:focus{outline:none;border-color:var(--lang);}
+.note-add-row{display:flex;gap:8px;margin-bottom:12px;}
+.note-add-input{flex:1;border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
+.note-add-input:focus{outline:none;border-color:var(--lang);}
+.btn-add-note{padding:9px 16px;border-radius:var(--rs);border:none;background:var(--lang);color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+.note-item{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);margin-bottom:6px;transition:all .15s;}
+.note-item.done{background:var(--rest-bg);border-color:var(--rest-bd);}
+.note-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;transition:all .2s;}
+.note-check.checked{background:var(--threads);border-color:var(--threads);color:#fff;}
+.note-text{flex:1;font-size:13px;line-height:1.5;}
+.note-text.struck{text-decoration:line-through;color:var(--muted);}
+.note-actions{display:none;gap:4px;}
+.note-item:hover .note-actions{display:flex;}
+.note-btn{padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:none;font-size:11px;cursor:pointer;font-family:'Nunito',sans-serif;}
+.note-btn.del{color:#EF4444;}
+.note-btn:hover{background:var(--bg);}
+.bs-week-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;}
+
+/* ACHIEVEMENTS — gentle version */
+.ach-today-card{background:linear-gradient(135deg,#FFF9F5,#FFFBEB);border:1.5px solid #FDE68A;border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.ach-today-msg{font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.4;}
+.ach-core-row{display:flex;gap:8px;flex-wrap:wrap;}
+.ach-core-pill{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;cursor:default;}
+.ach-core-pill.done{background:#ECFDF5;border-color:#A7F3D0;color:#065F46;}
+.ach-core-pill.undone{background:#FEF2F2;border-color:#FECACA;color:#991B1B;opacity:.7;}
+.core-picker{display:flex;flex-wrap:wrap;gap:8px;}
+.core-pick-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;color:var(--muted);}
+.core-pick-btn.selected{background:var(--text);border-color:var(--text);color:#fff;}
+.core-pick-btn:hover:not(.selected){border-color:var(--text);color:var(--text);}
+.chain-msg{font-size:13px;font-weight:600;color:var(--muted);line-height:1.5;padding-left:14px;}
+.repair-banner{background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:var(--rs);padding:10px 14px;font-size:12px;font-weight:600;color:#92400E;margin-top:8px;line-height:1.5;}
+.ach-summary{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:16px;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;}
+.ach-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:15px;text-align:center;transition:all .2s;position:relative;}
+.ach-card.unlocked{border-color:#FDE68A;background:#FFFBEB;}
+.ach-card.unlocked:hover{box-shadow:0 4px 16px rgba(245,158,11,.15);transform:translateY(-1px);}
+.ach-card.ach-locked{opacity:.35;}
+.ach-icon{font-size:26px;margin-bottom:7px;}
+.ach-name{font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;margin-bottom:3px;color:var(--text);}
+.ach-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.ach-date{font-size:10px;color:var(--threads);font-weight:700;margin-top:5px;}
+.ach-new-glow{animation:achGlow .6s ease;}
+@keyframes achGlow{0%{box-shadow:0 0 0 0 rgba(245,158,11,.6);}100%{box-shadow:0 0 0 12px rgba(245,158,11,0);}}
+
+/* CHAIN */
+.chain-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.chain-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.chain-streak-big{font-family:'Nunito',sans-serif;font-size:44px;font-weight:800;color:var(--sport);line-height:1;min-width:60px;}
+.chain-lbl{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px;}
+.chain-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:10px;}
+.chain-link{height:34px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s;cursor:default;}
+.chain-link.chain-today{outline:2px solid var(--sport);outline-offset:2px;}
+.recap-period{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;}
+.recap-bars{display:flex;gap:8px;align-items:flex-end;height:80px;margin-bottom:8px;}
+.recap-day{display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;}
+.recap-bar-wrap{flex:1;display:flex;align-items:flex-end;}
+.recap-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .4s;}
+.recap-pct{font-size:9px;font-weight:700;color:var(--muted);}
+.recap-dlbl{font-size:10px;font-weight:700;color:var(--muted);}
+.recap-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0;}
+.rstat{background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center;}
+.rstat-num{font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;color:var(--text);}
+.rstat-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.recap-chain{margin-bottom:14px;}
+.rc-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:7px;}
+.rc-dots{display:flex;gap:5px;}
+.rc-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;transition:all .2s;}
+.recap-lang{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.rlang-row{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;}
+.rlang-bar{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.rlang-fill{height:100%;border-radius:4px;transition:width .6s;}
+.recap-msg{background:var(--bg);border-radius:var(--rs);padding:12px 14px;font-size:13px;font-weight:600;color:var(--text);line-height:1.5;}
+
+/* SETTINGS */
+.scard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:17px;margin-bottom:13px;}
+.scard h3{font-size:14px;font-weight:700;margin-bottom:13px;}
+.sfield{margin-bottom:11px;}
+.sfield label{font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
+.sfield input{width:100%;border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 11px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
+.sfield input:focus{outline:none;border-color:var(--sport);}
+.btn-pri{padding:8px 18px;border-radius:var(--rs);border:none;background:var(--text);color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+.sstatus{font-size:12px;margin-top:7px;font-weight:600;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--text);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;z-index:999;opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+@media(max-width:600px){
+  nav{padding:0 10px;}
+  .nav-brand{font-size:14px;margin-right:8px;}
+  .nav-tab{padding:8px 9px;font-size:12px;}
+  .page{padding:14px;}
+  .jgrid{grid-template-columns:1fr;}
+  .jcard.full{grid-column:1;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">🎀 <span>Celine</span>'s Planner</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('schedule',this)">📅 Jadwal</button>
+    <button class="nav-tab" onclick="showPage('journal',this)">📝 Jurnal</button>
+    <button class="nav-tab" onclick="showPage('habits',this)">✅ Habit</button>
+    <button class="nav-tab" onclick="showPage('language',this)">🗣️ Bahasa</button>
+    <button class="nav-tab" onclick="showPage('calendar',this)">📅 Kalender</button>
+    <button class="nav-tab" onclick="showPage('brainstorm',this)">🧠 Brainstorm</button>
+    <button class="nav-tab" onclick="showPage('achievements',this)">🏆 Achievements</button>
+    <button class="nav-tab" onclick="showPage('recap',this)">📊 Recap</button>
+    <button class="nav-tab" onclick="showPage('settings',this)">⚙️</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-sync" onclick="syncAll()"><span class="sync-dot" id="syncDot"></span>Sync</button>
+  </div>
+</nav>
+
+<!-- SCHEDULE -->
+<div class="page active" id="page-schedule">
+  <div class="date-header">
+    <div><div class="date-display" id="sdDisplay"></div><div class="date-sub" id="sdSub"></div></div>
+    <div class="date-nav">
+      <button class="btn-arrow" onclick="changeDay('sched',-1)">‹</button>
+      <button class="btn-today" onclick="goToday('sched')">Hari ini</button>
+      <button class="btn-arrow" onclick="changeDay('sched',1)">›</button>
+    </div>
+  </div>
+  <div class="sched-toolbar">
+    <button class="btn-add-block" onclick="openAddBlock()">+ Tambah blok</button>
+    <button class="btn-add-block" onclick="resetDay()" style="color:#EF4444;border-color:#FECACA">↺ Reset hari ini</button>
+    <span class="edit-hint">💡 Hover blok untuk edit atau hapus · Drag untuk urutkan</span>
+  </div>
+  <div class="legend-row">
+    <div class="leg"><div class="leg-dot" style="background:#F59E0B"></div>Doa</div>
+    <div class="leg"><div class="leg-dot" style="background:#3B82F6"></div>Kerja</div>
+    <div class="leg"><div class="leg-dot" style="background:#10B981"></div>PS–Threads</div>
+    <div class="leg"><div class="leg-dot" style="background:#22C55E"></div>PS–WA</div>
+    <div class="leg"><div class="leg-dot" style="background:#8B5CF6"></div>Bahasa</div>
+    <div class="leg"><div class="leg-dot" style="background:#F97316"></div>Olahraga</div>
+    <div class="leg"><div class="leg-dot" style="background:#14B8A6"></div>Portofolio</div>
+    <div class="leg"><div class="leg-dot" style="background:#EF4444"></div>Lamar</div>
+    <div class="leg"><div class="leg-dot" style="background:#EC4899"></div>Makan</div>
+    <div class="leg"><div class="leg-dot" style="background:#6B7280"></div>Bebas</div>
+  </div>
+  <div class="sched-list" id="schedList"></div>
+</div>
+
+<!-- JOURNAL -->
+<div class="page" id="page-journal">
+  <div class="date-header">
+    <div><div class="date-display" id="jdDisplay"></div><div class="date-sub" id="jdSub"></div></div>
+    <div class="date-nav">
+      <button class="btn-arrow" onclick="changeDay('jour',-1)">‹</button>
+      <button class="btn-today" onclick="goToday('jour')">Hari ini</button>
+      <button class="btn-arrow" onclick="changeDay('jour',1)">›</button>
+    </div>
+  </div>
+  <div class="jgrid">
+    <div class="jcard">
+      <div class="jlabel"><div class="jdot" style="background:#F59E0B"></div>Mood hari ini</div>
+      <div class="mood-row" id="moodRow">
+        <button class="mood-btn" data-mood="😊 Semangat" onclick="selMood(this)">😊 Semangat</button>
+        <button class="mood-btn" data-mood="😌 Tenang" onclick="selMood(this)">😌 Tenang</button>
+        <button class="mood-btn" data-mood="😐 Biasa" onclick="selMood(this)">😐 Biasa</button>
+        <button class="mood-btn" data-mood="😔 Lelah" onclick="selMood(this)">😔 Lelah</button>
+        <button class="mood-btn" data-mood="😤 Frustrasi" onclick="selMood(this)">😤 Frustrasi</button>
+        <button class="mood-btn" data-mood="🙏 Damai" onclick="selMood(this)">🙏 Damai</button>
+      </div>
+    </div>
+    <div class="jcard">
+      <div class="jlabel"><div class="jdot" style="background:#F59E0B"></div>3 Syukur hari ini</div>
+      <div class="grat-list">
+        <div class="grat-item"><div class="grat-num">1</div><input type="text" id="g1" placeholder="Saya bersyukur untuk..."/></div>
+        <div class="grat-item"><div class="grat-num">2</div><input type="text" id="g2" placeholder="Saya bersyukur untuk..."/></div>
+        <div class="grat-item"><div class="grat-num">3</div><input type="text" id="g3" placeholder="Saya bersyukur untuk..."/></div>
+      </div>
+    </div>
+    <div class="jcard full"><div class="jlabel"><div class="jdot" style="background:#8B5CF6"></div>Highlight hari ini</div><textarea class="jtextarea" id="jHighlight" placeholder="Apa yang paling berkesan hari ini?" rows="3"></textarea></div>
+    <div class="jcard full"><div class="jlabel"><div class="jdot" style="background:#14B8A6"></div>Refleksi & catatan bebas</div><textarea class="jtextarea" id="jReflect" placeholder="Tulis apa saja — perasaan, ide, hal yang mau diperbaiki besok..." rows="5"></textarea></div>
+    <div class="jcard"><div class="jlabel"><div class="jdot" style="background:#EF4444"></div>Tantangan hari ini</div><textarea class="jtextarea" id="jChallenge" placeholder="Apa yang berat hari ini?" rows="3"></textarea></div>
+    <div class="jcard"><div class="jlabel"><div class="jdot" style="background:#22C55E"></div>Target besok</div><textarea class="jtextarea" id="jTomorrow" placeholder="3 hal yang ingin aku capai besok..." rows="3"></textarea></div>
+  </div>
+  <button class="btn-save" onclick="saveJournal()">Simpan jurnal hari ini</button>
+  <div class="save-msg" id="jSaveMsg">✓ Jurnal tersimpan!</div>
+</div>
+
+<!-- HABITS -->
+<div class="page" id="page-habits">
+  <div class="date-header">
+    <div><div class="date-display" id="hdDisplay"></div><div class="date-sub" id="hdSub"></div></div>
+    <div class="date-nav">
+      <button class="btn-arrow" onclick="changeDay('habit',-1)">‹</button>
+      <button class="btn-today" onclick="goToday('habit')">Hari ini</button>
+      <button class="btn-arrow" onclick="changeDay('habit',1)">›</button>
+    </div>
+  </div>
+  <div class="streak-banner">
+    <div class="streak-num" id="streakNum">0</div>
+    <div><div class="streak-lbl">hari streak 🔥</div><div class="streak-sub" id="streakSub">Mulai hari ini!</div></div>
+  </div>
+  <div class="week-grid" id="weekGrid"></div>
+  <div class="hsec-title">🙏 Rohani</div><div class="hgrid" id="hg-rohani"></div>
+  <div class="hsec-title">💪 Olahraga & Tubuh</div><div class="hgrid" id="hg-body"></div>
+  <div class="hsec-title">🗣️ Belajar Bahasa</div><div class="hgrid" id="hg-lang"></div>
+  <div class="hsec-title">💼 Karier & Skill</div><div class="hgrid" id="hg-career"></div>
+  <button class="btn-save" onclick="saveHabits()" style="margin-top:14px">Simpan habit hari ini</button>
+  <div class="save-msg" id="hSaveMsg">✓ Habit tersimpan!</div>
+</div>
+
+<!-- LANGUAGE -->
+<div class="page" id="page-language">
+  <div class="lang-tabs">
+    <button class="lang-tab active" onclick="showLang('en',this)">🇬🇧 English</button>
+    <button class="lang-tab" onclick="showLang('zh',this)">🇨🇳 Mandarin</button>
+    <button class="lang-tab" onclick="showLang('de',this)">🇩🇪 Jerman</button>
+    <button class="lang-tab" onclick="showLang('ko',this)">🇰🇷 Korea</button>
+  </div>
+  <div id="langContent"></div>
+</div>
+
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="cal-nav">
+    <button class="btn-arrow" onclick="changeCalMonth(-1)">‹</button>
+    <div class="cal-month-label" id="calMonthLabel"></div>
+    <button class="btn-arrow" onclick="changeCalMonth(1)">›</button>
+  </div>
+  <div class="cal-legend-row">
+    <span><span class="cdot" style="background:#10B981;display:inline-block;vertical-align:middle;margin-right:4px"></span>≥80% habit</span>
+    <span><span class="cdot" style="background:#F59E0B;display:inline-block;vertical-align:middle;margin-right:4px"></span>40–79%</span>
+    <span><span class="cdot" style="background:#8B5CF6;display:inline-block;vertical-align:middle;margin-right:4px"></span>Jurnal ✓</span>
+    <div id="calLegend" style="margin-left:auto;font-size:12px;color:var(--muted);font-weight:600"></div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<!-- BRAINSTORM -->
+<div class="page" id="page-brainstorm">
+  <div class="bs-section">
+    <h3>🎯 Weekly Goals</h3>
+    <div class="bs-week-label" id="bsWeekLabel">Minggu ini</div>
+    <div class="bs-goal-item"><div class="bs-goal-num">1</div><input class="bs-goal-input" id="bsg1" placeholder="Goal utama minggu ini..."/></div>
+    <div class="bs-goal-item"><div class="bs-goal-num">2</div><input class="bs-goal-input" id="bsg2" placeholder="Goal kedua..."/></div>
+    <div class="bs-goal-item"><div class="bs-goal-num">3</div><input class="bs-goal-input" id="bsg3" placeholder="Goal ketiga..."/></div>
+    <button class="btn-save" onclick="saveBsGoals()" style="margin-top:12px">Simpan weekly goals</button>
+  </div>
+  <div class="bs-section">
+    <h3>📝 Notes & Brainstorm</h3>
+    <div class="note-add-row">
+      <input class="note-add-input" id="newNoteInput" placeholder="Tulis ide, to-do, atau catatan bebas..." onkeydown="if(event.key==='Enter')addNote()"/>
+      <button class="btn-add-note" onclick="addNote()">+ Tambah</button>
+    </div>
+    <div id="notesList"></div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="page" id="page-achievements">
+
+  <!-- Today's check-in -->
+  <div class="ach-today-card" id="achTodayCard">
+    <div class="ach-today-msg" id="achTodayMsg"></div>
+    <div class="ach-core-row" id="achCoreRow"></div>
+  </div>
+
+  <!-- Core habit picker -->
+  <div class="chain-wrap" style="margin-bottom:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div>
+        <div class="chain-lbl" style="font-size:14px;font-weight:800;color:var(--text)">🎯 Pilih habit utamamu</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Cukup 1–3 yang paling penting. Ini yang dihitung streak.</div>
+      </div>
+    </div>
+    <div class="core-picker" id="corePicker"></div>
+  </div>
+
+  <!-- Streak -->
+  <div class="chain-wrap">
+    <div class="chain-header">
+      <div>
+        <div class="chain-streak-big" id="chainStreak">0</div>
+        <div class="chain-lbl">hari berturut 🔥</div>
+      </div>
+      <div style="flex:1;">
+        <div class="chain-msg" id="chainMsg"></div>
+        <div class="repair-banner" id="repairBanner" style="display:none;">
+          💛 Kemarin skip — gak apa-apa! Hari ini mulai lagi aja. Satu hari pun udah bagus.
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">30 hari terakhir</div>
+    <div class="chain-grid" id="chainGrid"></div>
+    <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);font-weight:600;margin-top:8px;flex-wrap:wrap;">
+      <span>🔥 semua core habit ✓</span><span style="color:#F59E0B">✓ sebagian</span><span style="color:#E5E7EB">· belum</span>
+    </div>
+  </div>
+
+  <!-- Badges -->
+  <div style="font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin:18px 0 10px;">🏅 Badges</div>
+  <div class="ach-summary" id="achSummary"></div>
+  <div class="ach-grid" id="achGrid"></div>
+</div>
+
+<!-- RECAP -->
+<div class="page" id="page-recap">
+  <div class="chain-wrap" id="weekRecapContent"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="scard">
+    <h3>🔗 Google Sheets Sync</h3>
+    <div class="sfield"><label>URL Google Apps Script</label><input type="text" id="gasUrl" placeholder="https://script.google.com/macros/s/.../exec"/></div>
+    <button class="btn-pri" onclick="saveSettings()">Simpan & Test</button>
+    <div class="sstatus" id="sStatus"></div>
+  </div>
+  <div class="scard">
+    <h3>📊 Export data</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:11px">Export semua data ke file JSON.</p>
+    <button class="btn-pri" onclick="exportData()">Export JSON</button>
+  </div>
+</div>
+
+<!-- ADD/EDIT BLOCK MODAL -->
+<div class="modal-overlay" id="blockModal">
+  <div class="modal">
+    <h3 id="modalTitle">Tambah blok jadwal</h3>
+    <div class="field"><label>Waktu (HH:MM)</label><input type="time" id="mTime"/></div>
+    <div class="field"><label>Nama aktivitas</label><input type="text" id="mName" placeholder="Contoh: Olahraga pagi"/></div>
+    <div class="field"><label>Keterangan (opsional)</label><input type="text" id="mSub" placeholder="Detail singkat..."/></div>
+    <div class="field"><label>Durasi (opsional)</label><input type="text" id="mBadge" placeholder="Contoh: 30 mnt"/></div>
+    <div class="field"><label>Kategori</label>
+      <select id="mCat">
+        <option value="prayer">🟡 Doa / Rohani</option>
+        <option value="work">🔵 Kerja Remote</option>
+        <option value="ps-threads">🟢 PS – Threads</option>
+        <option value="ps-wa">🟩 PS – WA / Reminder</option>
+        <option value="lang">🟣 Belajar Bahasa</option>
+        <option value="sport">🟠 Olahraga</option>
+        <option value="port">🩵 Portofolio / Edtech</option>
+        <option value="job">🔴 Lamar Kerja</option>
+        <option value="meal">🩷 Makan / Istirahat</option>
+        <option value="rest">⚫ Bebas / Tidur</option>
+        <option value="prepare">🟤 Persiapan Konten</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-ok" onclick="saveBlock()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMINDER POPUP -->
+<div class="reminder-overlay" id="reminderOverlay">
+  <div class="reminder-box">
+    <div class="rem-icon" id="remIcon">⏰</div>
+    <div class="rem-time" id="remTime"></div>
+    <div class="rem-title" id="remTitle">Waktunya!</div>
+    <div class="rem-sub" id="remSub"></div>
+    <button class="rem-btn" onclick="dismissReminder()">Siap, mulai sekarang! ✓</button>
+    <button class="rem-snooze" onclick="snoozeReminder()">⏱ Tunda 10 menit</button>
+  </div>
+</div>
+
+<!-- EDIT LANGUAGE MODAL -->
+<div class="modal-overlay" id="langEditModal">
+  <div class="modal">
+    <h3 id="langEditTitle">Edit topik hari ini</h3>
+    <div class="field"><label>Topik utama</label><input type="text" id="leTopic" placeholder="Contoh: Simple Present Tense"/></div>
+    <div class="field"><label>Fokus / apa yang dipelajari</label><textarea id="leFocus" rows="3" placeholder="Detail singkat topik..."></textarea></div>
+    <div class="field"><label>Tag</label><input type="text" id="leTag" placeholder="Grammar / Vocab / Review ..."/></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeLangEdit()">Batal</button>
+      <button class="btn-ok" onclick="saveLangEdit()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── CONSTANTS ───────────────────────────────────────────
+const SK = 'celine_planner_v2';
+const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const HABITS_DEF = {
+  rohani:[{id:'doa_pagi',name:'Doa pagi',sub:'05:15 – 06:00',icon:'🙏',bg:'#FFFBEB'},{id:'doa_malam',name:'Doa malam',sub:'20:50',icon:'🕯️',bg:'#FFFBEB'},{id:'misa',name:'Misa (Minggu)',sub:'Ibadah mingguan',icon:'⛪',bg:'#FFFBEB'}],
+  body:[{id:'olahraga',name:'Olahraga',sub:'Jalan, skipping, atau YouTube workout',icon:'🏃',bg:'#FFF7ED'},{id:'selfcare',name:'Self care',sub:'Skincare, rapikan ruang',icon:'✨',bg:'#FDF2F8'}],
+  lang:[{id:'english',name:'English',sub:'Grammar, vocab, atau shadowing',icon:'🇬🇧',bg:'#EFF6FF'},{id:'mandarin',name:'Mandarin',sub:'HSK 1 vocab atau karakter',icon:'🇨🇳',bg:'#FEF2F2'},{id:'jerman',name:'Jerman',sub:'Duolingo atau video beginner',icon:'🇩🇪',bg:'#FFFBEB'},{id:'korea',name:'Korea',sub:'Hangul atau percakapan dasar',icon:'🇰🇷',bg:'#F5F3FF'}],
+  career:[{id:'portofolio',name:'Portofolio edtech',sub:'Buat, update, atau publish',icon:'💻',bg:'#F0FDFA'},{id:'lamar',name:'Lamar kerja',sub:'Kirim CV, riset, atau follow up',icon:'📩',bg:'#FEF2F2'},{id:'threads',name:'Threads PS',sub:'Upload konten atau manage DM',icon:'🧵',bg:'#ECFDF5'}],
+};
+
+// ─── STATE ────────────────────────────────────────────────
+let st = JSON.parse(localStorage.getItem(SK)||'{}');
+let schedDate = new Date(), jourDate = new Date(), habitDate = new Date();
+let activeLang = 'en', activeLangWeek = 1;
+let editIdx = -1, selMoodVal = '';
+let dragSrc = null;
+
+function save(){ localStorage.setItem(SK, JSON.stringify(st)); }
+function dk(d){ return d.toISOString().slice(0,10); }
+function fmtDate(d){ return `${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+function isToday(d){ return d.toDateString()===new Date().toDateString(); }
+
+// ─── DEFAULT SCHEDULE ─────────────────────────────────────
+const DEFAULT_SCHED = {
+  Senin:[
+    {t:"05:00",n:"Bangun & morning routine",s:"Cuci muka, minum air hangat",c:"rest"},
+    {t:"05:15",n:"Doa pagi",s:"Rosario / lectio divina / jurnal syukur",c:"prayer"},
+    {t:"06:00",n:"Olahraga",s:"Jalan kaki 20 mnt atau skipping 15 mnt",c:"sport"},
+    {t:"06:30",n:"Mandi & sarapan",s:"",c:"meal"},
+    {t:"07:00",n:"Belajar bahasa — English",s:"Grammar atau vocab",c:"lang",b:"45 mnt"},
+    {t:"07:50",n:"Siapkan konten Threads",s:"Finalisasi caption + jadwal upload",c:"prepare",b:"10 mnt"},
+    {t:"08:00",n:"Kerja remote — deep work",s:"Brand tasks sebelum meeting",c:"work"},
+    {t:"09:00",n:"Daily meeting",s:"Wajib hadir",c:"work"},
+    {t:"10:00",n:"War trial class",s:"",c:"work"},
+    {t:"10:30",n:"Sesi PS #1 — Threads & WA pagi",s:"Bales DM Threads, follow up WA PS",c:"ps-threads",b:"30–40 mnt"},
+    {t:"11:15",n:"Lanjut kerja / admin brand",s:"",c:"work"},
+    {t:"12:00",n:"Makan siang & istirahat",s:"Tidur siang sebentar boleh",c:"meal"},
+    {t:"13:00",n:"Sesi PS #2 — WA fulltalk",s:"Fulltalk PS baru, bales DM siang",c:"ps-wa",b:"30–40 mnt"},
+    {t:"13:45",n:"Portofolio Edtech",s:"Buat konten / project / dokumentasi",c:"port"},
+    {t:"15:00",n:"Lamar kerja",s:"Kirim CV, riset lowongan, perbarui profil",c:"job"},
+    {t:"15:30",n:"Sesi PS #3 — Reminder & status",s:"Kirim reminder H-1/H-3, update Lead Manager",c:"ps-wa",b:"20–30 mnt"},
+    {t:"16:00",n:"Belajar bahasa — Mandarin",s:"HSK 1 vocab / karakter",c:"lang",b:"45 mnt"},
+    {t:"16:45",n:"Waktu bebas & self care",s:"",c:"rest"},
+    {t:"17:30",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:00",n:"Belajar bahasa — Jerman",s:"Duolingo / video 30 mnt",c:"lang",b:"30 mnt"},
+    {t:"18:30",n:"Relaksasi",s:"Nonton, baca, atau ngobrol",c:"rest"},
+    {t:"20:40",n:"Siapkan konten Threads besok",s:"Draft caption + jadwal upload",c:"prepare",b:"10 mnt"},
+    {t:"20:50",n:"Doa malam & refleksi",s:"Syukur, doa penutup hari",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+  Selasa:[
+    {t:"05:00",n:"Bangun & morning routine",s:"",c:"rest"},
+    {t:"05:15",n:"Doa pagi",s:"Doa hening / meditasi",c:"prayer"},
+    {t:"06:00",n:"Olahraga",s:"YouTube workout ringan 20–30 mnt",c:"sport"},
+    {t:"06:30",n:"Mandi & sarapan",s:"",c:"meal"},
+    {t:"07:00",n:"Belajar bahasa — Korea",s:"Hangul / percakapan dasar",c:"lang",b:"45 mnt"},
+    {t:"07:50",n:"Cek & publish Threads",s:"",c:"prepare",b:"5 mnt"},
+    {t:"08:00",n:"Kerja remote",s:"Brand tasks",c:"work"},
+    {t:"09:00",n:"Daily meeting",s:"",c:"work"},
+    {t:"10:00",n:"War trial class",s:"",c:"work"},
+    {t:"10:30",n:"Sesi PS #1 — DM Threads pagi",s:"Bales semua DM masuk sejak kemarin",c:"ps-threads",b:"30 mnt"},
+    {t:"11:00",n:"Lanjut kerja / admin brand",s:"",c:"work"},
+    {t:"12:00",n:"Makan siang & istirahat",s:"",c:"meal"},
+    {t:"13:00",n:"Belajar bahasa — Mandarin",s:"Review HSK, latihan menulis karakter",c:"lang",b:"45 mnt"},
+    {t:"13:45",n:"Sesi PS #2 — WA fulltalk",s:"Lanjut percakapan PS, closing trial class",c:"ps-wa",b:"30–40 mnt"},
+    {t:"14:30",n:"Portofolio Edtech",s:"Riset tools edtech, tulis artikel/insight",c:"port"},
+    {t:"15:30",n:"Sesi PS #3 — Reminder harian",s:"Kirim reminder sesuai status PS",c:"ps-wa",b:"20 mnt"},
+    {t:"16:00",n:"Lamar kerja",s:"Tailoring CV / cover letter",c:"job"},
+    {t:"16:45",n:"Waktu bebas & self care",s:"",c:"rest"},
+    {t:"17:00",n:"Olahraga sore ringan",s:"Jalan santai 15–20 mnt",c:"sport"},
+    {t:"17:30",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:00",n:"Belajar bahasa — English",s:"Writing practice / nonton konten English",c:"lang",b:"45 mnt"},
+    {t:"18:45",n:"Relaksasi",s:"",c:"rest"},
+    {t:"20:40",n:"Siapkan konten Threads besok",s:"",c:"prepare",b:"10 mnt"},
+    {t:"20:50",n:"Doa malam",s:"",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+  Rabu:[
+    {t:"05:00",n:"Bangun & morning routine",s:"",c:"rest"},
+    {t:"05:15",n:"Doa pagi",s:"Novena / doa khusus hari Rabu",c:"prayer"},
+    {t:"06:00",n:"Olahraga",s:"Skipping 15 mnt + stretching",c:"sport"},
+    {t:"06:30",n:"Mandi & sarapan",s:"",c:"meal"},
+    {t:"07:00",n:"Belajar bahasa — Jerman",s:"Duolingo + grammar",c:"lang",b:"45 mnt"},
+    {t:"07:50",n:"Cek & publish Threads",s:"",c:"prepare",b:"5 mnt"},
+    {t:"08:00",n:"Kerja remote",s:"",c:"work"},
+    {t:"09:00",n:"Daily meeting",s:"",c:"work"},
+    {t:"10:00",n:"War trial class",s:"",c:"work"},
+    {t:"10:30",n:"Sesi PS #1 — Threads pagi",s:"Filter PS potensial vs ghosted",c:"ps-threads",b:"30 mnt"},
+    {t:"11:00",n:"Lanjut kerja",s:"",c:"work"},
+    {t:"12:00",n:"Makan siang & istirahat",s:"",c:"meal"},
+    {t:"13:00",n:"Mini review mingguan",s:"Cek progres bahasa, lamar, portofolio",c:"port"},
+    {t:"13:30",n:"Sesi PS #2 — WA + update Lead Manager",s:"Fulltalk WA + perbarui status semua PS",c:"ps-wa",b:"40 mnt"},
+    {t:"14:15",n:"Portofolio Edtech",s:"Deep work: build project / case study",c:"port"},
+    {t:"15:30",n:"Sesi PS #3 — Reminder",s:"",c:"ps-wa",b:"20 mnt"},
+    {t:"16:00",n:"Lamar kerja",s:"LinkedIn update / reach out recruiter",c:"job"},
+    {t:"16:45",n:"Waktu bebas",s:"",c:"rest"},
+    {t:"17:00",n:"Olahraga / jalan sore",s:"",c:"sport"},
+    {t:"17:30",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:00",n:"Belajar bahasa — Korea",s:"",c:"lang",b:"45 mnt"},
+    {t:"18:45",n:"Relaksasi",s:"",c:"rest"},
+    {t:"20:40",n:"Siapkan konten Threads besok",s:"",c:"prepare",b:"10 mnt"},
+    {t:"20:50",n:"Doa malam",s:"",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+  Kamis:[
+    {t:"05:00",n:"Bangun & morning routine",s:"",c:"rest"},
+    {t:"05:15",n:"Doa pagi",s:"",c:"prayer"},
+    {t:"06:00",n:"Olahraga",s:"Jalan kaki + skipping kombinasi",c:"sport"},
+    {t:"06:30",n:"Mandi & sarapan",s:"",c:"meal"},
+    {t:"07:00",n:"Belajar bahasa — English",s:"Speaking practice / shadowing",c:"lang",b:"45 mnt"},
+    {t:"07:50",n:"Cek & publish Threads",s:"",c:"prepare",b:"5 mnt"},
+    {t:"08:00",n:"Kerja remote",s:"",c:"work"},
+    {t:"09:00",n:"Daily meeting",s:"",c:"work"},
+    {t:"10:00",n:"War trial class",s:"",c:"work"},
+    {t:"10:30",n:"Sesi PS #1 — Threads pagi",s:"",c:"ps-threads",b:"30 mnt"},
+    {t:"11:00",n:"Lanjut kerja",s:"",c:"work"},
+    {t:"12:00",n:"Makan siang & istirahat",s:"",c:"meal"},
+    {t:"13:00",n:"Sesi PS #2 — WA fulltalk",s:"",c:"ps-wa",b:"30–40 mnt"},
+    {t:"13:45",n:"Belajar bahasa — Mandarin",s:"Latihan speaking / shadowing",c:"lang",b:"45 mnt"},
+    {t:"14:30",n:"Portofolio Edtech",s:"Publish / update portfolio online",c:"port"},
+    {t:"15:30",n:"Sesi PS #3 — Reminder + cek slot trial",s:"",c:"ps-wa",b:"25 mnt"},
+    {t:"16:00",n:"Lamar kerja",s:"Kirim aplikasi / follow up",c:"job"},
+    {t:"16:45",n:"Waktu bebas & self care",s:"",c:"rest"},
+    {t:"17:30",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:00",n:"Belajar bahasa — Jerman",s:"",c:"lang",b:"30 mnt"},
+    {t:"18:30",n:"Relaksasi",s:"",c:"rest"},
+    {t:"20:40",n:"Siapkan konten Threads besok",s:"",c:"prepare",b:"10 mnt"},
+    {t:"20:50",n:"Doa malam",s:"",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+  Jumat:[
+    {t:"05:00",n:"Bangun & morning routine",s:"",c:"rest"},
+    {t:"05:15",n:"Doa pagi",s:"Ibadat Jumat / doa tobat",c:"prayer"},
+    {t:"06:00",n:"Olahraga",s:"YouTube workout 30 mnt",c:"sport"},
+    {t:"06:30",n:"Mandi & sarapan",s:"",c:"meal"},
+    {t:"07:00",n:"Belajar bahasa — Korea",s:"",c:"lang",b:"45 mnt"},
+    {t:"07:50",n:"Cek & publish Threads",s:"",c:"prepare",b:"5 mnt"},
+    {t:"08:00",n:"Kerja remote",s:"",c:"work"},
+    {t:"09:00",n:"Daily meeting",s:"",c:"work"},
+    {t:"10:00",n:"War trial class",s:"",c:"work"},
+    {t:"10:30",n:"Sesi PS #1 — Threads pagi",s:"",c:"ps-threads",b:"30 mnt"},
+    {t:"11:00",n:"Lanjut kerja",s:"",c:"work"},
+    {t:"12:00",n:"Makan siang & istirahat",s:"",c:"meal"},
+    {t:"13:00",n:"Sesi PS #2 — WA + recap PS minggu ini",s:"Rekap status PS: trial, follow up, ghosted",c:"ps-wa",b:"40 mnt"},
+    {t:"13:45",n:"Portofolio Edtech",s:"Weekly push: update, publish, share",c:"port"},
+    {t:"15:00",n:"Lamar kerja",s:"Review semua aplikasi minggu ini",c:"job"},
+    {t:"15:30",n:"Sesi PS #3 — Reminder terakhir minggu ini",s:"",c:"ps-wa",b:"20 mnt"},
+    {t:"16:00",n:"Waktu bebas — reward akhir pekan!",s:"Enjoy!",c:"rest"},
+    {t:"17:30",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:00",n:"Relaksasi / quality time",s:"",c:"rest"},
+    {t:"20:40",n:"Siapkan konten Threads Sabtu (opsional)",s:"",c:"prepare",b:"10 mnt"},
+    {t:"20:50",n:"Doa malam",s:"",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+  Sabtu:[
+    {t:"05:00",n:"Bangun & morning routine",s:"",c:"rest"},
+    {t:"05:15",n:"Doa pagi (lebih panjang)",s:"Lectio divina / doa pribadi mendalam",c:"prayer"},
+    {t:"06:30",n:"Olahraga lebih lama",s:"Jalan 30–40 mnt atau YouTube workout",c:"sport"},
+    {t:"07:15",n:"Mandi & sarapan santai",s:"",c:"meal"},
+    {t:"08:00",n:"Belajar bahasa bebas pilih",s:"Fokus 1 bahasa yang mau diperkuat",c:"lang",b:"1 jam"},
+    {t:"09:00",n:"Portofolio Edtech — deep work",s:"Sesi panjang tanpa gangguan",c:"port"},
+    {t:"11:30",n:"Istirahat & makan siang",s:"",c:"meal"},
+    {t:"12:30",n:"Sesi PS Sabtu (opsional)",s:"Bales DM / WA kalau ada yang masuk",c:"ps-threads",b:"20 mnt"},
+    {t:"13:00",n:"Lamar kerja",s:"Riset perusahaan target, buat list baru",c:"job"},
+    {t:"14:30",n:"Self care & me-time",s:"",c:"rest"},
+    {t:"16:00",n:"Waktu bebas / sosial",s:"Teman, keluarga, atau outing",c:"rest"},
+    {t:"18:00",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:30",n:"Relaksasi malam",s:"",c:"rest"},
+    {t:"20:50",n:"Doa malam",s:"",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+  Minggu:[
+    {t:"05:00",n:"Bangun & morning routine",s:"",c:"rest"},
+    {t:"05:15",n:"Doa pagi panjang",s:"Rosario / meditasi / devosi keluarga",c:"prayer"},
+    {t:"06:30",n:"Misa / ibadah",s:"Online atau gereja — wajib Minggu",c:"prayer"},
+    {t:"08:00",n:"Sarapan & santai",s:"",c:"meal"},
+    {t:"09:00",n:"Olahraga ringan",s:"Jalan pagi santai",c:"sport"},
+    {t:"10:00",n:"Me-time total",s:"Baca, nonton, kreativitas bebas",c:"rest"},
+    {t:"12:00",n:"Makan siang",s:"",c:"meal"},
+    {t:"13:00",n:"Review mingguan",s:"Evaluasi semua area, planning Senin",c:"port"},
+    {t:"14:00",n:"Persiapan mental minggu baru",s:"Journaling, gratitude, set 3 tujuan utama",c:"prayer"},
+    {t:"15:00",n:"Waktu bebas & sosial",s:"Family time, outing, atau istirahat total",c:"rest"},
+    {t:"18:00",n:"Makan malam",s:"",c:"meal"},
+    {t:"18:30",n:"Self care malam",s:"",c:"rest"},
+    {t:"20:50",n:"Doa malam",s:"",c:"prayer"},
+    {t:"21:00",n:"Tidur",s:"",c:"rest"},
+  ],
+};
+
+// ─── LANGUAGE CURRICULUM ─────────────────────────────────
+const LANG_INFO = {
+  en:{flag:'🇬🇧',name:'English',level:'Intermediate — Grammar dari awal + Vocab',color:'#3B82F6',bg:'#EFF6FF',bd:'#BFDBFE'},
+  zh:{flag:'🇨🇳',name:'Mandarin',level:'Beginner — HSK 1 (150 kosakata dasar)',color:'#EF4444',bg:'#FEF2F2',bd:'#FECACA'},
+  de:{flag:'🇩🇪',name:'Jerman',level:'Beginner — A1 dari nol',color:'#F59E0B',bg:'#FFFBEB',bd:'#FDE68A'},
+  ko:{flag:'🇰🇷',name:'Korea',level:'Beginner — Hangul + percakapan dasar',color:'#8B5CF6',bg:'#F5F3FF',bd:'#DDD6FE'},
+};
+const CURRICULUM = {
+  en:[
+    // Week 1 — Simple Tenses + Greetings Vocab
+    {day:1,topic:'Simple Present Tense',focus:'Rumus S + V1 (s/es), konteks rutinitas harian',tag:'Grammar'},
+    {day:2,topic:'Vocab: Daily Routine',focus:'20 kata: wake up, brush teeth, commute, cook, sleep, dst.',tag:'Vocab'},
+    {day:3,topic:'Simple Past Tense',focus:'Rumus S + V2, regular vs irregular verbs (50 kata umum)',tag:'Grammar'},
+    {day:4,topic:'Vocab: Feelings & Emotions',focus:'20 kata: anxious, grateful, overwhelmed, motivated, dst.',tag:'Vocab'},
+    {day:5,topic:'Simple Future (will / going to)',focus:'Perbedaan "will" vs "going to", latihan buat kalimat rencana',tag:'Grammar'},
+    {day:6,topic:'Vocab: Work & Job',focus:'20 kata: remote work, deadline, meeting, colleague, apply, dst.',tag:'Vocab'},
+    {day:7,topic:'Review Minggu 1',focus:'Tulis 10 kalimat tentang rutinitasmu pakai 3 tenses di atas',tag:'Review'},
+    // Week 2 — Continuous Tenses + Education Vocab
+    {day:8,topic:'Present Continuous Tense',focus:'Rumus S + am/is/are + V-ing, kapan dipakai vs Simple Present',tag:'Grammar'},
+    {day:9,topic:'Vocab: Education & Learning',focus:'20 kata: curriculum, portfolio, enroll, certificate, tutor, dst.',tag:'Vocab'},
+    {day:10,topic:'Past Continuous Tense',focus:'Rumus S + was/were + V-ing, gabung dengan Simple Past',tag:'Grammar'},
+    {day:11,topic:'Vocab: Technology',focus:'20 kata: platform, interface, upload, sync, dashboard, dst.',tag:'Vocab'},
+    {day:12,topic:'Future Continuous Tense',focus:'S + will be + V-ing, konteks rencana yang sedang berlangsung',tag:'Grammar'},
+    {day:13,topic:'Vocab: Body & Health',focus:'20 kata: workout, stretch, fatigue, hydrate, consistency, dst.',tag:'Vocab'},
+    {day:14,topic:'Review Minggu 2',focus:'Tulis cerita pendek (5–7 kalimat) pakai continuous tenses',tag:'Review'},
+    // Week 3 — Perfect Tenses + Social Media Vocab
+    {day:15,topic:'Present Perfect Tense',focus:'S + have/has + V3, pakai "already, yet, just, ever, never"',tag:'Grammar'},
+    {day:16,topic:'Vocab: Social Media & Content',focus:'20 kata: caption, engagement, reach, follower, thread, dst.',tag:'Vocab'},
+    {day:17,topic:'Past Perfect Tense',focus:'S + had + V3, urutan kejadian masa lalu',tag:'Grammar'},
+    {day:18,topic:'Vocab: Personality & Character',focus:'20 kata: consistent, disciplined, resilient, ambitious, dst.',tag:'Vocab'},
+    {day:19,topic:'Articles: a, an, the',focus:'Aturan kapan pakai a/an/the vs tidak pakai artikel sama sekali',tag:'Grammar'},
+    {day:20,topic:'Vocab: Food & Lifestyle',focus:'20 kata: nutritious, portion, hydration, habit, balance, dst.',tag:'Vocab'},
+    {day:21,topic:'Review Minggu 3',focus:'Buat 10 kalimat tentang pencapaianmu pakai Perfect Tenses',tag:'Review'},
+    // Week 4 — Modal + Prepositions + Mixed Vocab
+    {day:22,topic:'Modal Verbs: can, could, may, might',focus:'Arti dan perbedaan penggunaan 4 modal ini dalam konteks sehari-hari',tag:'Grammar'},
+    {day:23,topic:'Vocab: Travel & Places',focus:'20 kata: commute, destination, schedule, remote, relocate, dst.',tag:'Vocab'},
+    {day:24,topic:'Modal Verbs: should, must, have to',focus:'Obligation vs advice, perbedaan must vs have to',tag:'Grammar'},
+    {day:25,topic:'Vocab: Money & Finance',focus:'20 kata: income, expense, savings, invest, budget, freelance, dst.',tag:'Vocab'},
+    {day:26,topic:'Prepositions of Time & Place',focus:'at, on, in untuk waktu; at, on, in, between untuk tempat',tag:'Grammar'},
+    {day:27,topic:'Vocab: Communication',focus:'20 kata: negotiate, clarify, propose, respond, confirm, dst.',tag:'Vocab'},
+    {day:28,topic:'Review Minggu 4',focus:'Tulis paragraf perkenalan diri dalam English (5–8 kalimat)',tag:'Review'},
+    // Days 29-30
+    {day:29,topic:'Conjunctions: and, but, so, because, although',focus:'Cara sambungkan dua kalimat jadi lebih kompleks dan natural',tag:'Grammar'},
+    {day:30,topic:'Monthly Review & Self-Assessment',focus:'Bacain ulang semua vocab, test diri sendiri dengan 30 kalimat bebas',tag:'Review'},
+  ],
+  zh:[
+    // Week 1 — Pinyin + Greetings
+    {day:1,topic:'Pinyin: Initial Consonants',focus:'b p m f / d t n l / g k h — latihan baca & dengar',tag:'Pinyin'},
+    {day:2,topic:'Pinyin: Final Vowels + Tones',focus:'4 nada (ā á ǎ à), latihan bedain nada 1–4',tag:'Pinyin'},
+    {day:3,topic:'Sapaan & Perkenalan',focus:'你好 nǐhǎo, 我叫 wǒ jiào, 你叫什么名字?, 很高兴认识你',tag:'Kosakata'},
+    {day:4,topic:'Angka 0–10',focus:'零一二三四五六七八九十 — hafal + latihan tulis',tag:'Kosakata'},
+    {day:5,topic:'Angka 11–100 & Uang',focus:'十一, 二十, 百 — cara baca harga dan angka besar',tag:'Kosakata'},
+    {day:6,topic:'Hari & Waktu',focus:'星期一 s.d. 星期天, 几点?, 上午/下午/晚上',tag:'Kosakata'},
+    {day:7,topic:'Review Minggu 1',focus:'Latihan percakapan: perkenalan diri + bilang waktu sekarang',tag:'Review'},
+    // Week 2 — Kata Ganti + Keluarga + Warna
+    {day:8,topic:'Kata Ganti Orang',focus:'我你他她它我们你们他们 — singular dan plural',tag:'Tata Bahasa'},
+    {day:9,topic:'Kata Sifat Dasar',focus:'大小好坏多少冷热 — pakai 很 (hěn) sebagai modifier',tag:'Kosakata'},
+    {day:10,topic:'Keluarga',focus:'爸爸 妈妈 哥哥 姐姐 弟弟 妹妹 爷爷 奶奶',tag:'Kosakata'},
+    {day:11,topic:'Warna',focus:'红黄蓝绿白黑橙紫 — latihan kalimat: 这个是红色的',tag:'Kosakata'},
+    {day:12,topic:'Pola Kalimat: 是 (shì)',focus:'我是学生 / 我不是老师 / 你是哪国人?',tag:'Tata Bahasa'},
+    {day:13,topic:'Pola Kalimat: 有 (yǒu)',focus:'我有一个姐姐 / 你有没有手机? / 这里有什么?',tag:'Tata Bahasa'},
+    {day:14,topic:'Review Minggu 2',focus:'Tulis 5 kalimat tentang keluargamu pakai 是 dan 有',tag:'Review'},
+    // Week 3 — Makanan + Aktivitas Harian
+    {day:15,topic:'Makanan & Minuman',focus:'米饭 面条 饺子 水 茶 咖啡 苹果 香蕉 — 10 kata',tag:'Kosakata'},
+    {day:16,topic:'Aktivitas Harian',focus:'起床 吃饭 工作 学习 睡觉 运动 看书 — 7 kata + pakai dalam kalimat',tag:'Kosakata'},
+    {day:17,topic:'Kata Kerja Umum',focus:'去 来 做 看 听 说 写 买 — pola dasar S + V + O',tag:'Tata Bahasa'},
+    {day:18,topic:'Waktu: Kemarin/Hari ini/Besok',focus:'昨天 今天 明天 — pakai dengan aktivitas: 我今天学习汉语',tag:'Kosakata'},
+    {day:19,topic:'Lokasi & Arah',focus:'这里 那里 上面 下面 左边 右边 前面 后面',tag:'Kosakata'},
+    {day:20,topic:'Pertanyaan Dasar',focus:'什么 哪里 谁 什么时候 为什么 怎么 — 6 kata tanya',tag:'Tata Bahasa'},
+    {day:21,topic:'Review Minggu 3',focus:'Ceritakan rutinitasmu dalam 5 kalimat Mandarin sederhana',tag:'Review'},
+    // Week 4 — Transportasi + Belanja + Karakter
+    {day:22,topic:'Transportasi',focus:'公共汽车 地铁 出租车 飞机 火车 骑自行车 — 6 kata',tag:'Kosakata'},
+    {day:23,topic:'Belanja & Harga',focus:'多少钱? 太贵了 便宜 我要买 我不要 — percakapan di toko',tag:'Kosakata'},
+    {day:24,topic:'Karakter Dasar: Radikal',focus:'Belajar 10 radikal umum: 人口手目耳木水火土山',tag:'Karakter'},
+    {day:25,topic:'Karakter: Angka & Hari',focus:'Tulis ulang karakter angka 1–10 + hari dalam seminggu',tag:'Karakter'},
+    {day:26,topic:'Cuaca & Alam',focus:'天气 太阳 雨 云 热 冷 风 — 7 kata + kalimat sederhana',tag:'Kosakata'},
+    {day:27,topic:'Perasaan & Kondisi',focus:'我很好 我有点累 我很开心 我不舒服 — ekspresi diri',tag:'Kosakata'},
+    {day:28,topic:'Review Minggu 4',focus:'Percakapan simulasi: perkenalan + tanya harga + minta arah',tag:'Review'},
+    {day:29,topic:'HSK 1 Full List Review',focus:'150 kosakata HSK 1 — tandai yang sudah hafal dan yang belum',tag:'Review'},
+    {day:30,topic:'Mini Test HSK 1',focus:'Buat 20 kalimat pakai vocab HSK 1, rekam diri membaca keras',tag:'Review'},
+  ],
+  de:[
+    // Week 1 — Alfabet, Sapaan, Angka
+    {day:1,topic:'Alfabet & Pengucapan',focus:'26 huruf + ä ö ü ß, cara baca ch, sch, ie, ei, au',tag:'Dasar'},
+    {day:2,topic:'Sapaan & Perkenalan',focus:'Hallo, Guten Morgen/Tag/Abend, Ich heiße..., Wie heißt du?',tag:'Percakapan'},
+    {day:3,topic:'Angka 1–20',focus:'eins bis zwanzig — hafal dan latihan pengucapan',tag:'Kosakata'},
+    {day:4,topic:'Angka 21–100 & Umur',focus:'Pola puluhan: dreißig, vierzig... + Wie alt bist du? Ich bin 25.',tag:'Kosakata'},
+    {day:5,topic:'Kata Ganti Orang (Pronomen)',focus:'ich du er sie es / wir ihr sie Sie — singular & plural',tag:'Tata Bahasa'},
+    {day:6,topic:'Kata Kerja sein (to be)',focus:'ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie sind',tag:'Tata Bahasa'},
+    {day:7,topic:'Review Minggu 1',focus:'Perkenalan diri lengkap: nama, umur, asal, pekerjaan dalam bahasa Jerman',tag:'Review'},
+    // Week 2 — Kata Benda + Artikel
+    {day:8,topic:'Artikel: der, die, das',focus:'Kata benda Jerman punya 3 genus — cara belajar dengan warna/label',tag:'Tata Bahasa'},
+    {day:9,topic:'Kata Benda Sehari-hari (der)',focus:'der Mann, der Tisch, der Stuhl, der Beruf, der Tag — 10 kata',tag:'Kosakata'},
+    {day:10,topic:'Kata Benda Sehari-hari (die)',focus:'die Frau, die Arbeit, die Zeit, die Schule, die Sprache — 10 kata',tag:'Kosakata'},
+    {day:11,topic:'Kata Benda Sehari-hari (das)',focus:'das Kind, das Buch, das Haus, das Wasser, das Jahr — 10 kata',tag:'Kosakata'},
+    {day:12,topic:'Kata Kerja haben (to have)',focus:'ich habe, du hast, er hat, wir haben... + kalimat: Ich habe ein Buch.',tag:'Tata Bahasa'},
+    {day:13,topic:'Bentuk Jamak (Plural)',focus:'Pola -e, -er, -en, -s, -n untuk membentuk jamak kata benda',tag:'Tata Bahasa'},
+    {day:14,topic:'Review Minggu 2',focus:'5 kalimat pakai sein, 5 kalimat pakai haben dengan kata benda yang dipelajari',tag:'Review'},
+    // Week 3 — Kata Kerja Reguler + Sehari-hari
+    {day:15,topic:'Konjugasi Kata Kerja Reguler',focus:'machen, lernen, arbeiten — pola: -e, -st, -t, -en, -t, -en',tag:'Tata Bahasa'},
+    {day:16,topic:'Aktivitas Harian',focus:'aufstehen, essen, schlafen, arbeiten, lernen, gehen — 6 kata kerja',tag:'Kosakata'},
+    {day:17,topic:'Waktu & Hari',focus:'Montag s.d. Sonntag + Wie spät ist es? — pukul berapa sekarang?',tag:'Kosakata'},
+    {day:18,topic:'Warna & Kata Sifat Dasar',focus:'rot, blau, grün, groß, klein, gut, schlecht, neu, alt',tag:'Kosakata'},
+    {day:19,topic:'Kata Tanya',focus:'Wer? Was? Wo? Wann? Wie? Warum? Wie viel? — 7 kata tanya',tag:'Tata Bahasa'},
+    {day:20,topic:'Negasi: nicht & kein',focus:'Kapan pakai nicht vs kein, posisi nicht dalam kalimat',tag:'Tata Bahasa'},
+    {day:21,topic:'Review Minggu 3',focus:'Ceritakan harimu dalam 5 kalimat Jerman sederhana',tag:'Review'},
+    // Week 4 — Kalimat Lengkap + Topik Praktis
+    {day:22,topic:'Makanan & Minuman',focus:'das Wasser, der Kaffee, das Brot, das Fleisch, das Obst — 10 kata',tag:'Kosakata'},
+    {day:23,topic:'Di Restoran & Café',focus:'Ich möchte... bestellen, Die Rechnung bitte, Wie viel kostet das?',tag:'Percakapan'},
+    {day:24,topic:'Transportasi & Arah',focus:'der Bus, die U-Bahn, links, rechts, geradeaus, Wo ist...?',tag:'Kosakata'},
+    {day:25,topic:'Kata Kerja Modal: können & wollen',focus:'ich kann, du kannst / ich will, du willst — latihan kalimat',tag:'Tata Bahasa'},
+    {day:26,topic:'Kata Kerja Modal: müssen & möchten',focus:'Ich muss arbeiten / Ich möchte lernen — keharusan vs keinginan',tag:'Tata Bahasa'},
+    {day:27,topic:'Hobi & Waktu Luang',focus:'Ich lese gern / Ich spiele gern — cara bilang suka/tidak suka',tag:'Percakapan'},
+    {day:28,topic:'Review Minggu 4',focus:'Dialog: di kafe — pesan makanan, tanya harga, pamit',tag:'Review'},
+    {day:29,topic:'Kata Depan (Präpositionen)',focus:'in, auf, an, bei, mit, zu, von — konteks lokasi dan arah',tag:'Tata Bahasa'},
+    {day:30,topic:'Monthly Review A1',focus:'Tulis 15 kalimat tentang dirimu + mingguanmu dalam bahasa Jerman',tag:'Review'},
+  ],
+  ko:[
+    // Week 1 — Hangul Vokal + Konsonan Dasar
+    {day:1,topic:'Hangul: 10 Vokal Dasar',focus:'ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ — baca + tulis + hafal',tag:'Hangul'},
+    {day:2,topic:'Hangul: 14 Konsonan Dasar',focus:'ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ — baca + tulis',tag:'Hangul'},
+    {day:3,topic:'Struktur Suku Kata Hangul',focus:'Cara gabungkan konsonan + vokal: 가 나 다 라 마 바 — latihan nulis',tag:'Hangul'},
+    {day:4,topic:'Hangul: Konsonan Ganda (쌍자음)',focus:'ㄲ ㄸ ㅃ ㅆ ㅉ — keras, latihan bedain bunyi dengan konsonan biasa',tag:'Hangul'},
+    {day:5,topic:'Hangul: Vokal Gabungan (이중모음)',focus:'ㅐ ㅒ ㅔ ㅖ ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ — baca dan latihan',tag:'Hangul'},
+    {day:6,topic:'Hangul: Batchim (받침)',focus:'Konsonan penutup suku kata, bunyi batchim yang paling umum',tag:'Hangul'},
+    {day:7,topic:'Review Minggu 1 — Baca Hangul',focus:'Latihan baca 20 kata sederhana Korea dari kanan ke kiri tanpa transliterasi',tag:'Review'},
+    // Week 2 — Kosakata Dasar + Sapaan
+    {day:8,topic:'Sapaan Formal & Informal',focus:'안녕하세요 / 안녕, 감사합니다 / 고마워, 죄송합니다 / 미안해',tag:'Percakapan'},
+    {day:9,topic:'Perkenalan Diri',focus:'저는 ___ 이에요/예요, 반가워요, 이름이 뭐예요?',tag:'Percakapan'},
+    {day:10,topic:'Angka: Sistem Korea (순우리말)',focus:'하나 둘 셋 넷 다섯 여섯 일곱 여덟 아홉 열 — dipakai untuk umur & jam',tag:'Kosakata'},
+    {day:11,topic:'Angka: Sistem Sino-Korea (한자)',focus:'일 이 삼 사 오 육 칠 팔 구 십 — dipakai untuk tanggal & harga',tag:'Kosakata'},
+    {day:12,topic:'Hari & Waktu',focus:'월요일 ~ 일요일 + 오늘 어제 내일 + 몇 시예요?',tag:'Kosakata'},
+    {day:13,topic:'Kata Ganti & Partikel Subjek',focus:'저/나 (saya), 당신/너 (kamu) + partikel 은/는 이/가',tag:'Tata Bahasa'},
+    {day:14,topic:'Review Minggu 2',focus:'Perkenalan lengkap: nama, asal, kegiatan hari ini dalam Korea',tag:'Review'},
+    // Week 3 — Kata Kerja Dasar
+    {day:15,topic:'Kata Kerja: Bentuk Dasar & Sopan',focus:'Akhiran -아요/어요 — 가요 (pergi), 먹어요 (makan), 자요 (tidur)',tag:'Tata Bahasa'},
+    {day:16,topic:'Aktivitas Harian',focus:'일어나다 먹다 가다 오다 자다 공부하다 일하다 — 7 kata kerja',tag:'Kosakata'},
+    {day:17,topic:'Makanan Korea Dasar',focus:'밥 물 커피 빵 고기 채소 과일 — 7 kata + 이거 얼마예요?',tag:'Kosakata'},
+    {day:18,topic:'Partikel Objek: 을/를',focus:'Pola S + O + V: 저는 밥을 먹어요, 저는 한국어를 공부해요',tag:'Tata Bahasa'},
+    {day:19,topic:'Lokasi & Ada/Tidak Ada',focus:'있어요 / 없어요 + 여기 거기 어디 집 학교 카페',tag:'Kosakata'},
+    {day:20,topic:'Kata Sifat Dasar',focus:'좋아요 싫어요 예쁘다 크다 작다 맛있다 — pakai dalam kalimat',tag:'Kosakata'},
+    {day:21,topic:'Review Minggu 3',focus:'Tulis 5 kalimat tentang kegiatan harianmu dalam bahasa Korea',tag:'Review'},
+    // Week 4 — Kalimat Sederhana Lengkap
+    {day:22,topic:'Pola Kalimat: 이에요/예요',focus:'저는 학생이에요 / 이거 커피예요 — identifikasi benda/orang',tag:'Tata Bahasa'},
+    {day:23,topic:'Pola Negatif: 안 + Kata Kerja',focus:'저는 안 가요, 저는 밥 안 먹어요 — negasi simpel',tag:'Tata Bahasa'},
+    {day:24,topic:'Transportasi & Tempat',focus:'버스 지하철 택시 + 어디에 가요? 어떻게 가요?',tag:'Kosakata'},
+    {day:25,topic:'Tanya Jawab Simpel',focus:'뭐예요? 어디예요? 언제예요? 왜요? 어떻게요? — 5 kata tanya',tag:'Percakapan'},
+    {day:26,topic:'Hobi & Suka/Tidak Suka',focus:'좋아해요 vs 싫어해요 + 저는 운동을 좋아해요',tag:'Percakapan'},
+    {day:27,topic:'Warna & Penampilan',focus:'빨간색 파란색 노란색 흰색 검은색 + 이 옷 어때요?',tag:'Kosakata'},
+    {day:28,topic:'Review Minggu 4',focus:'Dialog: di kafe — pesan minuman, tanya harga, bilang terima kasih',tag:'Review'},
+    {day:29,topic:'K-Drama Phrases',focus:'10 ekspresi umum dari drama: 괜찮아요? 진짜요? 대박! 화이팅! dll.',tag:'Percakapan'},
+    {day:30,topic:'Monthly Review',focus:'Baca ulang semua Hangul, test diri dengan 20 kata acak tanpa transliterasi',tag:'Review'},
+  ],
+};
+
+// ─── SCHEDULE FUNCTIONS ───────────────────────────────────
+const CAT_DOT = {prayer:'#F59E0B',work:'#3B82F6','ps-threads':'#10B981','ps-wa':'#22C55E',lang:'#8B5CF6',sport:'#F97316',port:'#14B8A6',job:'#EF4444',meal:'#EC4899',rest:'#6B7280',prepare:'#D97706'};
+
+function getDayItems() {
+  const dayName = DAYS[schedDate.getDay()];
+  const key = 'sched_' + dk(schedDate);
+  if (!st[key]) { st[key] = JSON.parse(JSON.stringify(DEFAULT_SCHED[dayName] || [])); save(); }
+  return st[key];
+}
+
+function renderSchedule() {
+  const dayName = DAYS[schedDate.getDay()];
+  document.getElementById('sdDisplay').textContent = fmtDate(schedDate);
+  document.getElementById('sdSub').textContent = isToday(schedDate) ? 'Hari ini' : '';
+  const items = getDayItems();
+  const list = document.getElementById('schedList');
+  list.innerHTML = '';
+  items.forEach((item, i) => {
+    const isLast = i === items.length - 1;
+    const blk = document.createElement('div');
+    blk.className = 'sched-block';
+    blk.draggable = true;
+    blk.dataset.idx = i;
+    blk.addEventListener('dragstart', e => { dragSrc = i; blk.classList.add('dragging'); });
+    blk.addEventListener('dragend', () => blk.classList.remove('dragging'));
+    blk.addEventListener('dragover', e => { e.preventDefault(); blk.classList.add('drag-over'); });
+    blk.addEventListener('dragleave', () => blk.classList.remove('drag-over'));
+    blk.addEventListener('drop', e => {
+      e.preventDefault(); blk.classList.remove('drag-over');
+      if (dragSrc === null || dragSrc === i) return;
+      const arr = getDayItems();
+      const moved = arr.splice(dragSrc, 1)[0];
+      arr.splice(i, 0, moved);
+      st['sched_' + dk(schedDate)] = arr;
+      save(); renderSchedule();
+    });
+    const tl = document.createElement('div'); tl.className = 's-time'; tl.textContent = item.t;
+    const conn = document.createElement('div'); conn.className = 's-conn';
+    const dot = document.createElement('div'); dot.className = 's-dot'; dot.style.background = CAT_DOT[item.c] || '#888';
+    conn.appendChild(dot);
+    if (!isLast) { const ln = document.createElement('div'); ln.className = 's-line'; conn.appendChild(ln); }
+    const card = document.createElement('div'); card.className = 'sched-card cat-' + item.c;
+    const tt = document.createElement('div'); tt.className = 'sc-title'; tt.textContent = item.n; card.appendChild(tt);
+    if (item.s) { const sb = document.createElement('div'); sb.className = 'sc-sub'; sb.textContent = item.s; card.appendChild(sb); }
+    if (item.b) {
+      const bg = document.createElement('span'); bg.className = 'sc-badge';
+      bg.textContent = item.b; bg.style.background = (CAT_DOT[item.c]||'#888')+'22'; bg.style.color = CAT_DOT[item.c]||'#888';
+      card.appendChild(bg);
+    }
+    const acts = document.createElement('div'); acts.className = 'sc-actions';
+    const editBtn = document.createElement('button'); editBtn.className = 'sc-btn'; editBtn.textContent = '✏️ Edit';
+    editBtn.onclick = () => openEditBlock(i);
+    const delBtn = document.createElement('button'); delBtn.className = 'sc-btn del'; delBtn.textContent = '🗑 Hapus';
+    delBtn.onclick = () => { getDayItems().splice(i,1); st['sched_'+dk(schedDate)] = getDayItems(); save(); renderSchedule(); };
+    acts.appendChild(editBtn); acts.appendChild(delBtn); card.appendChild(acts);
+    blk.appendChild(tl); blk.appendChild(conn); blk.appendChild(card);
+    list.appendChild(blk);
+  });
+}
+
+function openAddBlock() {
+  editIdx = -1;
+  document.getElementById('modalTitle').textContent = 'Tambah blok jadwal';
+  document.getElementById('mTime').value = '08:00';
+  document.getElementById('mName').value = '';
+  document.getElementById('mSub').value = '';
+  document.getElementById('mBadge').value = '';
+  document.getElementById('mCat').value = 'rest';
+  document.getElementById('blockModal').classList.add('open');
+}
+function openEditBlock(i) {
+  editIdx = i;
+  const item = getDayItems()[i];
+  document.getElementById('modalTitle').textContent = 'Edit blok jadwal';
+  document.getElementById('mTime').value = item.t;
+  document.getElementById('mName').value = item.n;
+  document.getElementById('mSub').value = item.s || '';
+  document.getElementById('mBadge').value = item.b || '';
+  document.getElementById('mCat').value = item.c;
+  document.getElementById('blockModal').classList.add('open');
+}
+function closeModal() { document.getElementById('blockModal').classList.remove('open'); }
+function saveBlock() {
+  const newItem = {
+    t: document.getElementById('mTime').value,
+    n: document.getElementById('mName').value.trim(),
+    s: document.getElementById('mSub').value.trim(),
+    b: document.getElementById('mBadge').value.trim(),
+    c: document.getElementById('mCat').value,
+  };
+  if (!newItem.n) { showToast('Nama aktivitas tidak boleh kosong!'); return; }
+  const arr = getDayItems();
+  if (editIdx >= 0) { arr[editIdx] = newItem; }
+  else { arr.push(newItem); arr.sort((a,b) => a.t.localeCompare(b.t)); }
+  st['sched_'+dk(schedDate)] = arr; save(); closeModal(); renderSchedule();
+  showToast(editIdx >= 0 ? '✓ Blok diperbarui!' : '✓ Blok ditambahkan!');
+}
+function resetDay() {
+  if (!confirm('Reset jadwal hari ini ke default?')) return;
+  const dayName = DAYS[schedDate.getDay()];
+  st['sched_'+dk(schedDate)] = JSON.parse(JSON.stringify(DEFAULT_SCHED[dayName] || []));
+  save(); renderSchedule(); showToast('↺ Jadwal direset ke default');
+}
+
+// ─── DATE HELPERS ──────────────────────────────────────────
+function changeDay(page, d) {
+  if (page==='sched') { schedDate.setDate(schedDate.getDate()+d); renderSchedule(); }
+  if (page==='jour') { jourDate.setDate(jourDate.getDate()+d); renderJournal(); }
+  if (page==='habit') { habitDate.setDate(habitDate.getDate()+d); renderHabits(); }
+}
+function goToday(page) {
+  if (page==='sched') { schedDate=new Date(); renderSchedule(); }
+  if (page==='jour') { jourDate=new Date(); renderJournal(); }
+  if (page==='habit') { habitDate=new Date(); renderHabits(); }
+}
+
+// ─── JOURNAL ─────────────────────────────────────────────
+function renderJournal() {
+  document.getElementById('jdDisplay').textContent = fmtDate(jourDate);
+  document.getElementById('jdSub').textContent = isToday(jourDate) ? 'Hari ini' : '';
+  const k = 'jour_'+dk(jourDate); const d = st[k]||{};
+  selMoodVal = d.mood||'';
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.toggle('sel', b.dataset.mood===selMoodVal));
+  document.getElementById('g1').value = (d.gratitude||[])[0]||'';
+  document.getElementById('g2').value = (d.gratitude||[])[1]||'';
+  document.getElementById('g3').value = (d.gratitude||[])[2]||'';
+  document.getElementById('jHighlight').value = d.highlight||'';
+  document.getElementById('jReflect').value = d.reflection||'';
+  document.getElementById('jChallenge').value = d.challenge||'';
+  document.getElementById('jTomorrow').value = d.tomorrow||'';
+  document.getElementById('jSaveMsg').classList.remove('show');
+}
+function selMood(btn) {
+  selMoodVal = btn.dataset.mood;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function saveJournal() {
+  const k = 'jour_'+dk(jourDate);
+  st[k] = {mood:selMoodVal,gratitude:[document.getElementById('g1').value,document.getElementById('g2').value,document.getElementById('g3').value],highlight:document.getElementById('jHighlight').value,reflection:document.getElementById('jReflect').value,challenge:document.getElementById('jChallenge').value,tomorrow:document.getElementById('jTomorrow').value,savedAt:new Date().toISOString()};
+  save(); const m=document.getElementById('jSaveMsg'); m.classList.add('show'); setTimeout(()=>m.classList.remove('show'),2500);
+}
+
+// ─── HABITS ──────────────────────────────────────────────
+function renderHabits() {
+  document.getElementById('hdDisplay').textContent = fmtDate(habitDate);
+  document.getElementById('hdSub').textContent = isToday(habitDate) ? 'Hari ini' : '';
+  renderWeekGrid(); renderStreak();
+  Object.entries(HABITS_DEF).forEach(([sec, habits]) => {
+    const g = document.getElementById('hg-'+sec); g.innerHTML = '';
+    const k = 'habit_'+dk(habitDate); const d = st[k]||{};
+    habits.forEach(h => {
+      const row = document.createElement('div'); row.className = 'hrow'+(d[h.id]?' done':'');
+      if (d[h.id]) { row.style.background = h.bg; row.style.borderColor = (CAT_DOT[h.id]||'#10B981')+'50'; }
+      const icon = document.createElement('div'); icon.className = 'hicon'; icon.style.background = h.bg; icon.textContent = h.icon;
+      const info = document.createElement('div'); info.style.flex='1';
+      info.innerHTML = `<div class="hname">${h.name}</div><div class="hsub">${h.sub}</div>`;
+      const chk = document.createElement('div'); chk.className = 'hchk'+(d[h.id]?' checked':''); chk.textContent = d[h.id]?'✓':'';
+      chk.onclick = () => {
+        if (!st['habit_'+dk(habitDate)]) st['habit_'+dk(habitDate)] = {};
+        st['habit_'+dk(habitDate)][h.id] = !st['habit_'+dk(habitDate)][h.id];
+        save(); renderHabits();
+      };
+      row.appendChild(icon); row.appendChild(info); row.appendChild(chk); g.appendChild(row);
+    });
+  });
+}
+function renderWeekGrid() {
+  const g = document.getElementById('weekGrid'); g.innerHTML = '';
+  const today = new Date();
+  const base = new Date(habitDate);
+  const dow = habitDate.getDay();
+  base.setDate(habitDate.getDate() - (dow===0?6:dow-1));
+  for (let i=0;i<7;i++) {
+    const d = new Date(base); d.setDate(base.getDate()+i);
+    const k = 'habit_'+dk(d); const data = st[k]||{};
+    const all = Object.values(HABITS_DEF).flat();
+    const done = all.filter(h=>data[h.id]).length;
+    const pct = Math.round((done/all.length)*100);
+    const wd = document.createElement('div');
+    const isTod = d.toDateString()===today.toDateString();
+    const isSel = d.toDateString()===habitDate.toDateString();
+    wd.className = 'wday'+(isTod?' today':'')+(isSel?' sel':'');
+    wd.innerHTML = `<div class="wdn">${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</div><div class="wdd">${d.getDate()}</div><div class="wdbar"><div class="wdfill" style="width:${pct}%"></div></div>`;
+    wd.onclick = () => { habitDate=new Date(d); renderHabits(); };
+    g.appendChild(wd);
+  }
+}
+function renderStreak() {
+  let streak=0; const d=new Date(); d.setDate(d.getDate()-1);
+  for (let i=0;i<365;i++) {
+    const k='habit_'+dk(d); const data=st[k]||{};
+    if (!data['doa_pagi']&&!data['olahraga']) break;
+    streak++; d.setDate(d.getDate()-1);
+  }
+  document.getElementById('streakNum').textContent=streak;
+  document.getElementById('streakSub').textContent=streak===0?'Mulai hari ini!':streak<7?'Terus jaga ya! 💪':streak<30?'Sudah seminggu lebih! 🌟':'Konsisten banget! 🔥';
+}
+function saveHabits() {
+  save(); const m=document.getElementById('hSaveMsg'); m.classList.add('show'); setTimeout(()=>m.classList.remove('show'),2500);
+  renderWeekGrid(); renderStreak();
+}
+
+// ─── LANGUAGE ────────────────────────────────────────────
+let timerInterval = null, timerTotal = 25*60, timerLeft = 25*60, timerRunning = false;
+let langEditDay = null, langEditLang = null;
+
+function showLang(code, btn) {
+  activeLang = code; activeLangWeek = 1;
+  document.querySelectorAll('.lang-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderLang();
+}
+
+function renderLang() {
+  const info = LANG_INFO[activeLang];
+  const curriculum = CURRICULUM[activeLang];
+  const content = document.getElementById('langContent');
+  content.innerHTML = '';
+
+  // ── Header
+  const hdr = document.createElement('div'); hdr.className = 'lang-header';
+  hdr.style.borderColor = info.bd; hdr.style.background = info.bg;
+  // progress count
+  const doneCount = curriculum.filter(c => !!st[`lang_${activeLang}_day${c.day}`]).length;
+  hdr.innerHTML = `<h3 style="color:${info.color}">${info.flag} ${info.name}</h3><p>${info.level} · <b style="color:${info.color}">${doneCount}/30</b> hari selesai</p>`;
+  content.appendChild(hdr);
+
+  // ── Timer bar
+  const tbar = document.createElement('div'); tbar.className = 'timer-bar'; tbar.id = 'timerBar';
+  tbar.style.borderColor = info.bd;
+  tbar.innerHTML = `
+    <div>
+      <div class="timer-lbl">⏱ Timer belajar ${info.flag}</div>
+      <div class="timer-face" id="timerFace">${fmtTimer(timerLeft)}</div>
+      <div class="timer-progress"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+    </div>
+    <div class="timer-btns">
+      <button class="tbtn primary" id="timerStartBtn" onclick="toggleTimer()">▶ Mulai</button>
+      <button class="tbtn danger" onclick="resetTimer()">↺ Reset</button>
+    </div>
+    <div class="timer-presets">
+      <button class="tpreset${timerTotal===15*60?' sel':''}" onclick="setTimer(15)">15m</button>
+      <button class="tpreset${timerTotal===25*60?' sel':''}" onclick="setTimer(25)">25m</button>
+      <button class="tpreset${timerTotal===30*60?' sel':''}" onclick="setTimer(30)">30m</button>
+      <button class="tpreset${timerTotal===45*60?' sel':''}" onclick="setTimer(45)">45m</button>
+    </div>`;
+  content.appendChild(tbar);
+
+  // ── Week tabs
+  const wtabs = document.createElement('div'); wtabs.className = 'lang-week';
+  [1,2,3,4,5].forEach((w,i) => {
+    const btn = document.createElement('button'); btn.className = 'lang-week-btn'+(activeLangWeek===(i+1)?' active':'');
+    btn.textContent = i < 4 ? `Minggu ${w}` : 'Hari 29–30';
+    btn.onclick = () => { activeLangWeek=i+1; renderLang(); };
+    wtabs.appendChild(btn);
+  });
+  content.appendChild(wtabs);
+
+  // ── Day cards
+  const cards = document.createElement('div'); cards.className = 'day-cards';
+  const ranges = [[1,7],[8,14],[15,21],[22,28],[29,30]];
+  const [from,to] = ranges[activeLangWeek-1];
+  const dayItems = curriculum.filter(c=>c.day>=from&&c.day<=to);
+  dayItems.forEach(item => {
+    const storeKey = `lang_${activeLang}_day${item.day}`;
+    const editKey = `lang_edit_${activeLang}_day${item.day}`;
+    const override = st[editKey] || {};
+    const topic = override.topic || item.topic;
+    const focus = override.focus || item.focus;
+    const tag = override.tag || item.tag;
+    const done = !!st[storeKey];
+
+    const card = document.createElement('div'); card.className = 'day-card'+(done?' done-card':'');
+    const num = document.createElement('div'); num.className = 'dc-num'; num.textContent = item.day;
+    const body = document.createElement('div'); body.className = 'dc-body';
+    body.innerHTML = `
+      <div class="dc-day">Hari ${item.day}${override.topic?' · <span style="color:${info.color};font-size:10px">✏️ diedit</span>':''}</div>
+      <div class="dc-topic">${topic}</div>
+      <div class="dc-focus">${focus}</div>
+      <span class="dc-tag" style="background:${info.color}20;color:${info.color}">${tag}</span>
+      <div class="dc-actions">
+        <button class="dc-btn" onclick="openLangEdit('${activeLang}',${item.day})">✏️ Edit topik</button>
+        ${override.topic ? `<button class="dc-btn" style="color:#EF4444" onclick="resetLangEdit('${activeLang}',${item.day})">↺ Reset</button>` : ''}
+      </div>`;
+    const chk = document.createElement('div');
+    chk.className = 'dc-check'+(done?' checked':'');
+    chk.textContent = done ? '✓' : '';
+    chk.style.borderColor = done ? info.color : '';
+    chk.style.background = done ? info.color : '';
+    chk.title = done ? 'Tandai belum selesai' : 'Tandai selesai';
+    chk.onclick = () => { st[storeKey]=!st[storeKey]; if(!st[storeKey]) delete st[storeKey]; save(); renderLang(); };
+    card.appendChild(num); card.appendChild(body); card.appendChild(chk);
+    cards.appendChild(card);
+  });
+  content.appendChild(cards);
+}
+
+// Timer
+function fmtTimer(s) { return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+function updateTimerUI() {
+  const face = document.getElementById('timerFace');
+  const fill = document.getElementById('timerFill');
+  const startBtn = document.getElementById('timerStartBtn');
+  if (!face) return;
+  face.textContent = fmtTimer(timerLeft);
+  face.className = 'timer-face' + (timerRunning?' running':'') + (timerLeft===0?' done':'');
+  if (fill) fill.style.width = (timerLeft/timerTotal*100)+'%';
+  if (startBtn) startBtn.textContent = timerRunning ? '⏸ Pause' : (timerLeft<timerTotal&&timerLeft>0 ? '▶ Lanjut' : '▶ Mulai');
+}
+function toggleTimer() {
+  if (timerLeft === 0) { resetTimer(); return; }
+  timerRunning = !timerRunning;
+  if (timerRunning) {
+    timerInterval = setInterval(() => {
+      timerLeft--;
+      updateTimerUI();
+      if (timerLeft === 0) {
+        clearInterval(timerInterval); timerRunning = false;
+        showReminderPopup({icon:'🎉',time:'Timer selesai!',title:'Sesi belajar selesai!',sub:`Kamu sudah belajar ${timerTotal/60} menit. Jangan lupa centang topik yang sudah dipelajari ya!`});
+        try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA...').play(); } catch(e) {}
+      }
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+  }
+  updateTimerUI();
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false; timerLeft = timerTotal;
+  updateTimerUI();
+}
+function setTimer(mins) {
+  clearInterval(timerInterval); timerRunning = false;
+  timerTotal = mins*60; timerLeft = mins*60;
+  renderLang();
+}
+
+// Lang Edit Modal
+function openLangEdit(lang, day) {
+  langEditLang = lang; langEditDay = day;
+  const editKey = `lang_edit_${lang}_day${day}`;
+  const override = st[editKey] || {};
+  const base = CURRICULUM[lang].find(c=>c.day===day)||{};
+  document.getElementById('langEditTitle').textContent = `Edit topik — Hari ${day}`;
+  document.getElementById('leTopic').value = override.topic || base.topic || '';
+  document.getElementById('leFocus').value = override.focus || base.focus || '';
+  document.getElementById('leTag').value = override.tag || base.tag || '';
+  document.getElementById('langEditModal').classList.add('open');
+}
+function closeLangEdit() { document.getElementById('langEditModal').classList.remove('open'); }
+function saveLangEdit() {
+  const editKey = `lang_edit_${langEditLang}_day${langEditDay}`;
+  st[editKey] = {
+    topic: document.getElementById('leTopic').value.trim(),
+    focus: document.getElementById('leFocus').value.trim(),
+    tag: document.getElementById('leTag').value.trim(),
+  };
+  save(); closeLangEdit(); renderLang(); showToast('✓ Topik diperbarui!');
+}
+function resetLangEdit(lang, day) {
+  const editKey = `lang_edit_${lang}_day${day}`;
+  delete st[editKey]; save(); renderLang(); showToast('↺ Topik dikembalikan ke default');
+}
+
+// ─── REMINDER SYSTEM ─────────────────────────────────────
+const REMINDERS = [
+  {time:'05:15',icon:'🙏',title:'Waktunya doa pagi!',sub:'Mulai hari dengan syukur. Rosario, lectio divina, atau jurnal syukur.'},
+  {time:'06:00',icon:'🏃',title:'Waktunya olahraga!',sub:'Jalan kaki, skipping, atau YouTube workout — 15–30 menit aja dulu.'},
+  {time:'07:00',icon:'🗣️',title:'Belajar bahasa dulu!',sub:'Sesi bahasa pagi — 45 menit sebelum kerja dimulai.'},
+  {time:'07:50',icon:'🧵',title:'Siapkan konten Threads!',sub:'10 menit finalisasi caption & jadwal upload untuk hari ini.'},
+  {time:'09:00',icon:'💼',title:'Daily meeting!',sub:'Wajib hadir — buka Zoom/Meet sekarang.'},
+  {time:'10:00',icon:'⚔️',title:'War trial class dimulai!',sub:'Saatnya follow up PS dan manage lead.'},
+  {time:'10:30',icon:'💬',title:'Sesi PS #1 — Threads & WA',sub:'Bales DM Threads dan follow up WA PS yang belum konfirmasi.'},
+  {time:'12:00',icon:'🍽️',title:'Makan siang!',sub:'Istirahat dulu, lepas dari layar sebentar.'},
+  {time:'13:00',icon:'💬',title:'Sesi PS #2 — WA fulltalk',sub:'Fulltalk PS baru dan bales DM yang masuk sejak tadi.'},
+  {time:'15:30',icon:'🔔',title:'Sesi PS #3 — Reminder!',sub:'Kirim reminder H-1 / H-3 ke PS. Update status di Lead Manager.'},
+  {time:'16:00',icon:'🗣️',title:'Belajar bahasa sore!',sub:'Sesi kedua — Mandarin, Jerman, atau Korea.'},
+  {time:'17:30',icon:'🍽️',title:'Makan malam!',sub:''},
+  {time:'20:40',icon:'🧵',title:'Siapkan konten Threads besok!',sub:'10 menit draft caption + jadwal upload untuk besok.'},
+  {time:'20:50',icon:'🙏',title:'Doa malam & refleksi',sub:'Tutup hari dengan syukur dan doa penutup.'},
+  {time:'21:00',icon:'😴',title:'Waktunya tidur!',sub:'Istirahat yang cukup adalah investasi untuk besok. Selamat malam! 🌙'},
+];
+let lastReminder = null, snoozedUntil = null;
+
+function checkReminders() {
+  const now = new Date();
+  const hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  if (snoozedUntil && now < snoozedUntil) return;
+  const rem = REMINDERS.find(r => r.time === hhmm);
+  if (rem && lastReminder !== hhmm) {
+    lastReminder = hhmm;
+    showReminderPopup(rem);
+  }
+}
+function showReminderPopup(rem) {
+  document.getElementById('remIcon').textContent = rem.icon;
+  document.getElementById('remTime').textContent = rem.time || '';
+  document.getElementById('remTitle').textContent = rem.title;
+  document.getElementById('remSub').textContent = rem.sub || '';
+  document.getElementById('reminderOverlay').classList.add('open');
+  // Browser notification if allowed
+  if (Notification.permission === 'granted') {
+    new Notification(rem.title, { body: rem.sub, icon: '✨' });
+  }
+}
+function dismissReminder() { document.getElementById('reminderOverlay').classList.remove('open'); snoozedUntil = null; }
+function snoozeReminder() {
+  document.getElementById('reminderOverlay').classList.remove('open');
+  snoozedUntil = new Date(Date.now() + 10*60*1000);
+  showToast('⏱ Ditunda 10 menit');
+}
+function requestNotifPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+setInterval(checkReminders, 30000); // check every 30s
+
+// ─── SETTINGS ────────────────────────────────────────────
+function saveSettings() {
+  const url = document.getElementById('gasUrl').value.trim();
+  st.gasUrl = url; save();
+  const s = document.getElementById('sStatus');
+  s.textContent='Menghubungkan...'; s.style.color='var(--muted)';
+  fetch(url+'?action=ping').then(r=>r.json()).then(d=>{
+    if(d.status==='ok'){s.textContent='✓ Terhubung!';s.style.color='var(--threads)';setSyncDot('ok');}
+    else{s.textContent='✗ Gagal: '+(d.error||'unknown');s.style.color='var(--job)';setSyncDot('err');}
+  }).catch(()=>{s.textContent='✗ Tidak bisa terhubung.';s.style.color='var(--job)';setSyncDot('err');});
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(st,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='celine-planner-'+dk(new Date())+'.json'; a.click();
+}
+async function syncAll() {
+  if (!st.gasUrl) { showToast('Set URL Google Sheets dulu di ⚙️ Setelan!'); return; }
+  showToast('Menyinkron...');
+  try {
+    const res = await fetch(st.gasUrl, {method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'writeAll',data:st})});
+    const d = await res.json();
+    if(d.status==='ok'){showToast('✓ Sync berhasil!');setSyncDot('ok');}
+    else{showToast('Sync gagal: '+(d.error||'?'));setSyncDot('err');}
+  } catch(e){showToast('Sync error.');setSyncDot('err');}
+}
+function setSyncDot(s){document.getElementById('syncDot').className='sync-dot '+s;}
+
+// ─── NAV & TOAST ─────────────────────────────────────────
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='schedule') renderSchedule();
+  if(name==='journal') renderJournal();
+  if(name==='habits') renderHabits();
+  if(name==='language') { activeLang='en'; activeLangWeek=1; document.querySelectorAll('.lang-tab')[0].classList.add('active'); renderLang(); }
+  if(name==='calendar') renderCalendar();
+  if(name==='brainstorm') renderBrainstorm();
+  if(name==='achievements') { renderChain(); renderAchievements(); }
+  if(name==='recap') renderWeeklyRecap();
+}
+function showPageById(name) {
+  const btn = Array.from(document.querySelectorAll('.nav-tab')).find(b=>b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'"));
+  if(btn) showPage(name, btn);
+}
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ═══════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function renderCalendar() {
+  const today = new Date();
+  document.getElementById('calMonthLabel').textContent =
+    MONTHS[calMonth] + ' ' + calYear;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  // day headers
+  ['Min','Sen','Sel','Rab','Kam','Jum','Sab'].forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-dh'; h.textContent = d; grid.appendChild(h);
+  });
+
+  // blank cells
+  for (let i=0; i<firstDay; i++) {
+    const b = document.createElement('div'); b.className='cal-cell empty'; grid.appendChild(b);
+  }
+
+  for (let day=1; day<=daysInMonth; day++) {
+    const d = new Date(calYear, calMonth, day);
+    const key = dk(d);
+    const isT = d.toDateString()===today.toDateString();
+
+    // compute fill level from habits + journal
+    const hdata = st['habit_'+key]||{};
+    const allH = Object.values(HABITS_DEF).flat();
+    const habitPct = Math.round(allH.filter(h=>hdata[h.id]).length/allH.length*100);
+    const hasJour = !!(st['jour_'+key]);
+    const langDone = ['en','zh','de','ko'].filter(l =>
+      Object.keys(st).some(k => k.startsWith(`lang_${l}_day`) && st[k])
+    ).length;
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (isT?' cal-today':'');
+    cell.innerHTML = `<span class="cal-num">${day}</span>`;
+
+    if (habitPct > 0 || hasJour) {
+      const dots = document.createElement('div'); dots.className='cal-dots';
+      if (habitPct >= 80) dots.innerHTML += `<span class="cdot" style="background:#10B981" title="${habitPct}% habit"></span>`;
+      else if (habitPct >= 40) dots.innerHTML += `<span class="cdot" style="background:#F59E0B"></span>`;
+      else if (habitPct > 0) dots.innerHTML += `<span class="cdot" style="background:#E5E7EB"></span>`;
+      if (hasJour) dots.innerHTML += `<span class="cdot" style="background:#8B5CF6" title="Jurnal"></span>`;
+      cell.appendChild(dots);
+    }
+    cell.title = `${day} ${MONTHS[calMonth]}: ${habitPct}% habit${hasJour?' · jurnal ✓':''}`;
+    cell.onclick = () => {
+      schedDate = new Date(d); jourDate = new Date(d); habitDate = new Date(d);
+      showPageById('schedule');
+    };
+    grid.appendChild(cell);
+  }
+
+  // legend
+  const leg = document.getElementById('calLegend');
+  const total = daysInMonth;
+  let done80=0, done40=0, hasjour=0;
+  for(let day=1;day<=total;day++){
+    const k = dk(new Date(calYear,calMonth,day));
+    const h=st['habit_'+k]||{};
+    const pct=Math.round(Object.values(HABITS_DEF).flat().filter(hh=>h[hh.id]).length/Object.values(HABITS_DEF).flat().length*100);
+    if(pct>=80) done80++;
+    else if(pct>=40) done40++;
+    if(st['jour_'+k]) hasjour++;
+  }
+  leg.textContent = `Bulan ini: ${done80} hari ≥80% habit · ${hasjour} jurnal diisi`;
+}
+
+function changeCalMonth(d) {
+  calMonth += d;
+  if (calMonth > 11) { calMonth=0; calYear++; }
+  if (calMonth < 0) { calMonth=11; calYear--; }
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════════
+// BRAINSTORM / NOTES
+// ═══════════════════════════════════════════════
+let bsWeekKey = '';
+
+function getBsWeekKey() {
+  const now = new Date();
+  const dow = now.getDay();
+  const mon = new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1));
+  return 'bsweek_' + dk(mon);
+}
+
+function renderBrainstorm() {
+  bsWeekKey = getBsWeekKey();
+  const data = st[bsWeekKey] || { goals:['','',''], notes:[] };
+  if (!st[bsWeekKey]) { st[bsWeekKey] = data; save(); }
+
+  // weekly goals
+  ['g1','g2','g3'].forEach((id,i) => {
+    document.getElementById('bs'+id).value = data.goals[i]||'';
+  });
+
+  // notes list
+  renderNotesList();
+}
+
+function renderNotesList() {
+  const data = st[bsWeekKey] || { goals:['','',''], notes:[] };
+  const list = document.getElementById('notesList');
+  list.innerHTML = '';
+  (data.notes||[]).forEach((note, i) => {
+    const item = document.createElement('div');
+    item.className = 'note-item' + (note.done?' done':'');
+    item.innerHTML = `
+      <div class="note-check ${note.done?'checked':''}" onclick="toggleNote(${i})">${note.done?'✓':''}</div>
+      <div class="note-text ${note.done?'struck':''}" id="notetext_${i}">${escHtml(note.text)}</div>
+      <div class="note-actions">
+        <button class="note-btn" onclick="editNote(${i})">✏️</button>
+        <button class="note-btn del" onclick="deleteNote(${i})">🗑</button>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+function addNote() {
+  const inp = document.getElementById('newNoteInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  const data = st[bsWeekKey];
+  data.notes.push({ text, done:false, createdAt: new Date().toISOString() });
+  save(); inp.value=''; renderNotesList();
+}
+
+function toggleNote(i) {
+  const data = st[bsWeekKey];
+  data.notes[i].done = !data.notes[i].done;
+  save(); renderNotesList();
+}
+
+function deleteNote(i) {
+  const data = st[bsWeekKey];
+  data.notes.splice(i,1); save(); renderNotesList();
+}
+
+function editNote(i) {
+  const data = st[bsWeekKey];
+  const newText = prompt('Edit catatan:', data.notes[i].text);
+  if (newText !== null && newText.trim()) {
+    data.notes[i].text = newText.trim(); save(); renderNotesList();
+  }
+}
+
+function saveBsGoals() {
+  const data = st[bsWeekKey];
+  data.goals = [
+    document.getElementById('bsg1').value,
+    document.getElementById('bsg2').value,
+    document.getElementById('bsg3').value,
+  ];
+  save(); showToast('✓ Weekly goals tersimpan!');
+}
+
+function escHtml(t) {
+  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// ACHIEVEMENTS — gentle & motivating
+// ═══════════════════════════════════════════════
+
+// Default core habits — user can change these
+const ALL_PICKABLE = [
+  {id:'doa_pagi',   label:'🙏 Doa pagi'},
+  {id:'olahraga',   label:'🏃 Olahraga'},
+  {id:'english',    label:'🇬🇧 English'},
+  {id:'mandarin',   label:'🇨🇳 Mandarin'},
+  {id:'jerman',     label:'🇩🇪 Jerman'},
+  {id:'korea',      label:'🇰🇷 Korea'},
+  {id:'portofolio', label:'💻 Portofolio'},
+  {id:'lamar',      label:'📩 Lamar kerja'},
+  {id:'doa_malam',  label:'🕯️ Doa malam'},
+  {id:'selfcare',   label:'✨ Self care'},
+];
+function getCoreHabits() {
+  return st.coreHabits || ['doa_pagi','olahraga','english'];
+}
+
+// Easy-first badge list — many unlockable in first week
+const BADGES = [
+  // First steps — very easy
+  {id:'first_open',  icon:'✨', name:'Langkah Pertama',  desc:'Buka app untuk pertama kali',          tier:1, check:()=>true},
+  {id:'first_habit', icon:'⭐', name:'Satu Langkah Kecil', desc:'Selesaikan 1 habit hari ini',         tier:1, check:s=>Object.keys(s).some(k=>k.startsWith('habit_')&&Object.values(s[k]||{}).some(v=>v===true))},
+  {id:'first_jour',  icon:'📝', name:'Mulai Nulis',      desc:'Tulis jurnal untuk pertama kali',       tier:1, check:s=>Object.keys(s).some(k=>k.startsWith('jour_')&&s[k])},
+  {id:'first_lang',  icon:'🗣️', name:'Polyglot Pemula',  desc:'Selesaikan 1 topik bahasa',             tier:1, check:s=>['en','zh','de','ko'].some(l=>Object.keys(s).some(k=>k.startsWith(`lang_${l}_day`)))},
+
+  // 3-day streaks — achievable in first week
+  {id:'prayer_3',  icon:'🕯️', name:'3 Hari Bersyukur',    desc:'Doa pagi 3 hari berturut-turut',    tier:2, check:s=>countStreak(s,'doa_pagi')>=3},
+  {id:'sport_3',   icon:'👟', name:'3 Hari Bergerak',     desc:'Olahraga 3 hari berturut-turut',     tier:2, check:s=>countStreak(s,'olahraga')>=3},
+  {id:'lang_3',    icon:'🔤', name:'3 Hari Belajar',      desc:'Topik bahasa 3 hari berturut-turut', tier:2, check:s=>countStreak(s,'english')>=3||countStreak(s,'mandarin')>=3||countStreak(s,'jerman')>=3||countStreak(s,'korea')>=3},
+  {id:'jour_3',    icon:'📒', name:'3 Hari Refleksi',     desc:'Tulis jurnal 3 hari',                tier:2, check:s=>countJournal(s)>=3},
+  {id:'core_3',    icon:'🔥', name:'3 Hari Core Habit',   desc:'Semua habit utama pilihan kamu × 3 hari', tier:2, check:s=>getCoreStreak(s)>=3},
+
+  // 7-day — next milestone
+  {id:'prayer_7',  icon:'✝️', name:'Seminggu Rohani',    desc:'Doa pagi 7 hari berturut-turut',     tier:3, check:s=>countStreak(s,'doa_pagi')>=7},
+  {id:'sport_7',   icon:'🏃', name:'Seminggu Aktif',     desc:'Olahraga 7 hari berturut-turut',     tier:3, check:s=>countStreak(s,'olahraga')>=7},
+  {id:'jour_7',    icon:'📔', name:'Penulis Mingguan',   desc:'Tulis jurnal 7 hari',                tier:3, check:s=>countJournal(s)>=7},
+  {id:'lang_7',    icon:'🌍', name:'Seminggu Berbahasa', desc:'Belajar bahasa 7 hari',              tier:3, check:s=>['en','zh','de','ko'].some(l=>countStreak(s,l)>=7)},
+  {id:'core_7',    icon:'🌟', name:'Seminggu Penuh',     desc:'Semua core habit × 7 hari berturut', tier:3, check:s=>getCoreStreak(s)>=7},
+
+  // Language milestones — per week
+  {id:'en_w1',  icon:'🇬🇧', name:'English Week 1',  desc:'7 topik pertama selesai',  tier:2, check:s=>[1,2,3,4,5,6,7].every(d=>s[`lang_en_day${d}`])},
+  {id:'zh_w1',  icon:'🇨🇳', name:'Mandarin Week 1', desc:'7 topik pertama selesai',  tier:2, check:s=>[1,2,3,4,5,6,7].every(d=>s[`lang_zh_day${d}`])},
+  {id:'de_w1',  icon:'🇩🇪', name:'Jerman Week 1',   desc:'7 topik pertama selesai',  tier:2, check:s=>[1,2,3,4,5,6,7].every(d=>s[`lang_de_day${d}`])},
+  {id:'ko_w1',  icon:'🇰🇷', name:'Korea Week 1',    desc:'7 topik pertama selesai',  tier:2, check:s=>[1,2,3,4,5,6,7].every(d=>s[`lang_ko_day${d}`])},
+
+  // 30-day — long term, but listed so people can see the goal
+  {id:'prayer_30', icon:'🙏', name:'Satu Bulan Doa',     desc:'Doa pagi 30 hari (total)',    tier:4, check:s=>countHabitTotal(s,'doa_pagi')>=30},
+  {id:'sport_30',  icon:'💪', name:'Satu Bulan Gerak',   desc:'Olahraga 30 hari (total)',    tier:4, check:s=>countHabitTotal(s,'olahraga')>=30},
+  {id:'jour_30',   icon:'📕', name:'Satu Bulan Refleksi',desc:'Jurnal 30 hari (total)',      tier:4, check:s=>countJournal(s)>=30},
+  {id:'en_30',     icon:'🏅', name:'English 30 Hari',    desc:'Selesaikan semua 30 topik English', tier:4, check:s=>Array.from({length:30},(_,i)=>i+1).every(d=>s[`lang_en_day${d}`])},
+];
+
+const TIER_LABELS = {1:'🌱 Awal', 2:'⭐ Bronze', 3:'🥈 Silver', 4:'🥇 Gold'};
+
+function countStreak(s, habitId) {
+  let streak=0; const d=new Date(); d.setDate(d.getDate()-1);
+  for(let i=0;i<365;i++){
+    if(!(s['habit_'+dk(d)]||{})[habitId]) break;
+    streak++; d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+function getCoreStreak(s) {
+  const core = getCoreHabits();
+  let streak=0; const d=new Date(); d.setDate(d.getDate()-1);
+  for(let i=0;i<365;i++){
+    const hd = s['habit_'+dk(d)]||{};
+    if(!core.every(h=>hd[h])) break;
+    streak++; d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+function countHabitTotal(s, habitId) {
+  return Object.keys(s).filter(k=>k.startsWith('habit_')&&(s[k]||{})[habitId]).length;
+}
+function countJournal(s) {
+  return Object.keys(s).filter(k=>k.startsWith('jour_')&&s[k]&&(s[k].highlight||s[k].reflection||s[k].mood)).length;
+}
+
+function renderCorePicker() {
+  const el = document.getElementById('corePicker');
+  if (!el) return;
+  const selected = getCoreHabits();
+  el.innerHTML = '';
+  ALL_PICKABLE.forEach(h => {
+    const btn = document.createElement('button');
+    btn.className = 'core-pick-btn' + (selected.includes(h.id) ? ' selected' : '');
+    btn.textContent = h.label;
+    btn.onclick = () => {
+      const cur = getCoreHabits();
+      if (cur.includes(h.id)) {
+        if (cur.length <= 1) { showToast('Pilih minimal 1 habit!'); return; }
+        st.coreHabits = cur.filter(x=>x!==h.id);
+      } else {
+        if (cur.length >= 3) { showToast('Maksimal 3 habit inti ya!'); return; }
+        st.coreHabits = [...cur, h.id];
+      }
+      save(); renderCorePicker(); renderChain(); renderTodayCheckin();
+    };
+    el.appendChild(btn);
+  });
+}
+
+function renderTodayCheckin() {
+  const msgEl = document.getElementById('achTodayMsg');
+  const rowEl = document.getElementById('achCoreRow');
+  if (!msgEl || !rowEl) return;
+  const core = getCoreHabits();
+  const todayKey = 'habit_' + dk(new Date());
+  const todayData = st[todayKey] || {};
+  const doneCount = core.filter(h => todayData[h]).length;
+  const allDone = doneCount === core.length;
+
+  const hour = new Date().getHours();
+  let greeting = hour < 12 ? 'Selamat pagi' : hour < 15 ? 'Selamat siang' : hour < 18 ? 'Selamat sore' : 'Selamat malam';
+
+  if (allDone) {
+    msgEl.textContent = `${greeting}! 🎉 Core habit hari ini semua selesai. Kamu keren!`;
+  } else if (doneCount > 0) {
+    msgEl.textContent = `${greeting}! ${doneCount}/${core.length} core habit selesai hari ini. Sedikit lagi! 💪`;
+  } else {
+    const msgs = [
+      `${greeting}! Yuk mulai dari 1 habit hari ini — gak perlu sempurna. 🌱`,
+      `${greeting}! Hari ini baru mulai. Satu langkah kecil sudah cukup. ✨`,
+      `${greeting}! Mulai pelan-pelan aja. Kamu bisa! 🙂`,
+    ];
+    msgEl.textContent = msgs[new Date().getDay() % msgs.length];
+  }
+
+  rowEl.innerHTML = '';
+  ALL_PICKABLE.filter(h => core.includes(h.id)).forEach(h => {
+    const pill = document.createElement('div');
+    const done = !!todayData[h.id];
+    pill.className = 'ach-core-pill ' + (done ? 'done' : 'undone');
+    pill.innerHTML = `${done ? '✓' : '○'} ${h.label}`;
+    rowEl.appendChild(pill);
+  });
+}
+
+function renderAchievements() {
+  renderCorePicker();
+  renderTodayCheckin();
+  renderChain();
+
+  const grid = document.getElementById('achGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  let newUnlocks = [];
+
+  // Group by tier
+  [1,2,3,4].forEach(tier => {
+    const tierBadges = BADGES.filter(b=>b.tier===tier);
+    const tierLabel = document.createElement('div');
+    tierLabel.style.cssText = 'font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin:14px 0 8px;grid-column:1/-1;';
+    tierLabel.textContent = TIER_LABELS[tier];
+    grid.appendChild(tierLabel);
+
+    tierBadges.forEach(badge => {
+      const unlocked = badge.check(st);
+      const wasUnlocked = !!st['ach_'+badge.id];
+      if (unlocked && !wasUnlocked) {
+        st['ach_'+badge.id] = new Date().toISOString();
+        save();
+        newUnlocks.push(badge);
+      }
+      const card = document.createElement('div');
+      card.className = 'ach-card' + (unlocked ? ' unlocked' : ' ach-locked');
+      if (unlocked && !wasUnlocked) card.classList.add('ach-new-glow');
+      card.innerHTML = `
+        <div class="ach-icon">${unlocked ? badge.icon : '🔒'}</div>
+        <div class="ach-name">${badge.name}</div>
+        <div class="ach-desc">${badge.desc}</div>
+        ${unlocked && st['ach_'+badge.id] ? `<div class="ach-date">✓ ${new Date(st['ach_'+badge.id]).toLocaleDateString('id-ID')}</div>` : ''}`;
+      grid.appendChild(card);
+    });
+  });
+
+  const total = BADGES.length;
+  const done = BADGES.filter(b=>b.check(st)).length;
+  const summaryEl = document.getElementById('achSummary');
+  if (summaryEl) {
+    summaryEl.innerHTML = `<span style="color:var(--sport);font-weight:800">${done}</span> dari ${total} badges terbuka ${done===0?'— mulai hari ini yuk! 🌱':done<5?'— bagus banget permulaan! ⭐':done<15?'— kamu makin konsisten! 🌟':'— luar biasa! 🏆'}`;
+  }
+
+  if (newUnlocks.length > 0) {
+    setTimeout(() => showReminderPopup({
+      icon: newUnlocks[0].icon,
+      time: 'Badge baru terbuka! 🎉',
+      title: newUnlocks[0].name,
+      sub: newUnlocks[0].desc + (newUnlocks.length > 1 ? ` (+${newUnlocks.length-1} lainnya!)` : ' — kamu hebat!')
+    }), 500);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// WEEKLY RECAP
+// ═══════════════════════════════════════════════
+function renderWeeklyRecap() {
+  const today = new Date();
+  const dow = today.getDay();
+  const mon = new Date(today); mon.setDate(today.getDate()-(dow===0?6:dow-1));
+  const days = Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; });
+
+  const allH = Object.values(HABITS_DEF).flat();
+  let habitDays=0, perfectDays=0, journalDays=0, langDays=0;
+  const dayDetails = days.map(d => {
+    const k = dk(d); const hdata = st['habit_'+k]||{};
+    const done = allH.filter(h=>hdata[h.id]).length;
+    const pct = Math.round(done/allH.length*100);
+    if(pct>0) habitDays++;
+    if(pct===100) perfectDays++;
+    if(st['jour_'+k]) journalDays++;
+    const langD = ['en','zh','de','ko'].reduce((acc,l)=>acc+(hdata[`${l}_done`]?1:0),0);
+    return { d, pct, jour: !!st['jour_'+k], label:['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()] };
+  });
+
+  // lang progress this week
+  const langProgress = ['en','zh','de','ko'].map(l => {
+    const done = Object.keys(st).filter(k=>k.startsWith(`lang_${l}_day`)&&st[k]).length;
+    return { lang:l, done, info:LANG_INFO[l] };
+  });
+
+  const el = document.getElementById('weekRecapContent');
+  el.innerHTML = `
+    <div class="recap-period">Minggu ${mon.getDate()} – ${days[6].getDate()} ${MONTHS[days[6].getMonth()]} ${days[6].getFullYear()}</div>
+    <div class="recap-bars">
+      ${dayDetails.map(dd=>`
+        <div class="recap-day">
+          <div class="recap-bar-wrap">
+            <div class="recap-bar" style="height:${Math.max(4,dd.pct*0.6)}px;background:${dd.pct>=80?'#10B981':dd.pct>=40?'#F59E0B':'#E5E7EB'}"></div>
+          </div>
+          <div class="recap-pct">${dd.pct>0?dd.pct+'%':'-'}</div>
+          <div class="recap-dlbl">${dd.label}</div>
+          ${dd.jour?'<div style="font-size:9px;color:#8B5CF6">📝</div>':''}
+        </div>`).join('')}
+    </div>
+    <div class="recap-stats">
+      <div class="rstat"><div class="rstat-num">${habitDays}</div><div class="rstat-lbl">Hari aktif</div></div>
+      <div class="rstat"><div class="rstat-num">${perfectDays}</div><div class="rstat-lbl">Hari sempurna ⭐</div></div>
+      <div class="rstat"><div class="rstat-num">${journalDays}</div><div class="rstat-lbl">Jurnal diisi 📝</div></div>
+      <div class="rstat"><div class="rstat-num">${langProgress.reduce((a,l)=>a+l.done,0)}</div><div class="rstat-lbl">Topik bahasa ✓</div></div>
+    </div>
+    <div class="recap-chain">
+      <div class="rc-label">🔗 Chain minggu ini</div>
+      <div class="rc-dots">
+        ${dayDetails.map(dd=>`<div class="rc-dot" style="background:${dd.pct>=80?'#10B981':dd.pct>=40?'#F59E0B':'#E5E7EB'}" title="${dd.label}: ${dd.pct}%"></div>`).join('')}
+      </div>
+    </div>
+    <div class="recap-lang">
+      ${langProgress.map(lp=>`
+        <div class="rlang-row">
+          <span>${lp.info.flag} ${lp.info.name}</span>
+          <div class="rlang-bar"><div class="rlang-fill" style="width:${Math.round(lp.done/30*100)}%;background:${lp.info.color}"></div></div>
+          <span style="font-size:12px;font-weight:700;color:${lp.info.color}">${lp.done}/30</span>
+        </div>`).join('')}
+    </div>
+    <div class="recap-msg">${getRecapMessage(habitDays, perfectDays, journalDays)}</div>`;
+}
+
+function getRecapMessage(active, perfect, journal) {
+  if (perfect >= 5) return '🌟 Minggu luar biasa! Kamu hampir sempurna. Jaga terus!';
+  if (active >= 5) return '💪 Minggu yang bagus! Konsistensimu kelihatan nyata.';
+  if (active >= 3) return '👍 Lumayan! 3 hari lebih baik dari 0. Minggu depan bisa lebih.';
+  if (active >= 1) return '🌱 Minggu yang berat, tapi kamu tetap mulai. Itu yang penting.';
+  return '💛 Istirahat juga bagian dari proses. Mulai lagi hari ini — satu langkah kecil.';
+}
+
+// ═══════════════════════════════════════════════
+// DON'T BREAK THE CHAIN
+// ═══════════════════════════════════════════════
+function renderChain() {
+  const chainEl = document.getElementById('chainGrid');
+  if (!chainEl) return;
+  chainEl.innerHTML='';
+  const today = new Date();
+  const core = getCoreHabits();
+  const days = Array.from({length:30},(_,i)=>{ const d=new Date(today); d.setDate(today.getDate()-29+i); return d; });
+
+  days.forEach(d => {
+    const k='habit_'+dk(d); const hdata=st[k]||{};
+    const doneCnt = core.filter(h=>hdata[h]).length;
+    const allDone = doneCnt === core.length;
+    const some = doneCnt > 0;
+    const isT = d.toDateString()===today.toDateString();
+    const link = document.createElement('div');
+    link.className='chain-link'+(isT?' chain-today':'');
+    link.style.background = allDone?'#10B981':some?'#FDE68A':'#F3F4F6';
+    link.title = `${d.getDate()} ${MONTHS[d.getMonth()]}: ${doneCnt}/${core.length} core habit`;
+    link.textContent = allDone?'🔥':some?'✓':'';
+    chainEl.appendChild(link);
+  });
+
+  // streak = consecutive days ALL core habits done
+  let streak=0; const dd=new Date(today); dd.setDate(today.getDate()-1);
+  for(let i=0;i<365;i++){
+    const hdata=st['habit_'+dk(dd)]||{};
+    if(!core.every(h=>hdata[h])) break;
+    streak++; dd.setDate(dd.getDate()-1);
+  }
+  const chainNumEl = document.getElementById('chainStreak');
+  if (chainNumEl) chainNumEl.textContent = streak;
+
+  // Message based on streak
+  const chainMsgEl = document.getElementById('chainMsg');
+  if (chainMsgEl) {
+    const msgs = [
+      [0,  '✨ Mulai hari ini! Satu hari aja dulu.'],
+      [1,  '🌱 Hari pertama selesai! Besok lagi ya.'],
+      [2,  '👏 Dua hari berturut! Kamu bisa lanjut.'],
+      [3,  '🔥 Tiga hari! Sudah mulai terbentuk kebiasaannya.'],
+      [5,  '⭐ 5 hari! Kamu jauh lebih konsisten dari yang kamu pikir.'],
+      [7,  '🌟 Seminggu penuh! Ini luar biasa untuk kamu!'],
+      [14, '🏅 Dua minggu! Versi baru kamu udah keliatan nih.'],
+      [30, '🏆 30 hari! Kamu resmi konsisten sekarang.'],
+    ];
+    const msg = [...msgs].reverse().find(([min])=>streak>=min);
+    chainMsgEl.textContent = msg ? msg[1] : msgs[0][1];
+  }
+
+  // Repair banner — kalau kemarin skip
+  const yest = new Date(today); yest.setDate(today.getDate()-1);
+  const yestDone = core.every(h=>(st['habit_'+dk(yest)]||{})[h]);
+  const repEl = document.getElementById('repairBanner');
+  if (repEl) repEl.style.display = (!yestDone && streak===0) ? 'block' : 'none';
+}
+
+
+// ─── INIT ────────────────────────────────────────────────
+document.getElementById('gasUrl').value = st.gasUrl||'';
+renderSchedule();
+renderLang();
+requestNotifPermission();
+checkReminders();
+// Check achievements on load
+setTimeout(renderAchievements, 500);
+</script>
+</body>
+</html>
