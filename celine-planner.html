@@ -29,25 +29,14 @@
 body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 h1,h2,h3,h4{font-family:'Nunito',sans-serif;}
 
-/* NAV */
-nav{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:4px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
-.nav-brand{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;color:var(--text);padding:13px 0;margin-right:16px;white-space:nowrap;}
-.nav-brand span{color:var(--text);}
-.nav-tabs{display:flex;gap:3px;flex-wrap:wrap;}
-.nav-tab{padding:9px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--muted);transition:all .15s;white-space:nowrap;font-family:'Nunito',sans-serif;}
-.nav-tab:hover{background:var(--bg);color:var(--text);}
-.nav-tab.active{background:var(--text);color:#fff;}
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.btn-sync{padding:7px 13px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;font-family:'Nunito',sans-serif;}
+/* NAV (kept for compat, sidebar overrides) */
+.btn-sync{padding:7px 12px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;font-family:'Nunito',sans-serif;width:100%;}
 .btn-sync:hover{border-color:var(--text);color:var(--text);}
 .btn-lm{padding:7px 13px;border-radius:var(--rs);border:1.5px solid var(--text);background:var(--text);font-size:12px;font-weight:700;color:#fff;text-decoration:none;font-family:'Nunito',sans-serif;transition:all .15s;white-space:nowrap;}
 .btn-lm:hover{opacity:.85;}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:#D1D5DB;display:inline-block;margin-right:5px;transition:background .3s;}
 .sync-dot.ok{background:#10B981;}.sync-dot.err{background:#EF4444;}
-
-/* PAGES */
-.page{display:none;padding:20px;max-width:900px;margin:0 auto;}
-.page.active{display:block;}
+.hidden-tab{display:none!important;}
 
 /* DATE NAV */
 .date-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
@@ -517,28 +506,131 @@ nav{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 
 .cal-todo-text.done{text-decoration:line-through;color:var(--muted);}
 .cal-todo-del{font-size:11px;color:var(--muted);cursor:pointer;padding:2px 5px;border-radius:4px;background:none;border:none;}
 .cal-todo-del:hover{color:#EF4444;}
+
+/* ── LAYOUT ─────────────────────────────────────────── */
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{width:220px;background:var(--surface);border-right:1.5px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;transition:width .22s ease,transform .25s;}
+.sidebar.collapsed{width:56px;}
+.sidebar.collapsed .sb-label{display:none;}
+.sidebar.collapsed .sb-brand span{display:none;}
+.sidebar.collapsed .sb-brand{font-size:20px;padding:18px 0;text-align:center;}
+.sidebar.collapsed .sb-item{justify-content:center;padding:10px 0;}
+.sidebar.collapsed .sb-lm{justify-content:center;padding:10px 0;}
+.sidebar.collapsed .sb-icon{width:100%;text-align:center;font-size:18px;}
+.sidebar.collapsed .sb-sync{padding:10px 6px;}
+.sidebar.collapsed .sb-sync .btn-sync .sync-text{display:none;}
+.sidebar.collapsed .sb-divider{margin:8px 6px;}
+.sb-toggle{position:absolute;top:50%;right:-13px;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);transition:all .15s;z-index:51;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.sb-toggle:hover{background:var(--text);color:#fff;border-color:var(--text);}
+.main-content{margin-left:220px;flex:1;min-height:100vh;transition:margin-left .22s ease;}
+.main-content.collapsed{margin-left:56px;}
+.page{display:none;padding:24px;max-width:860px;}
+.page.active{display:block;}
+
+.sb-brand{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;color:var(--text);padding:20px 18px 14px;border-bottom:1.5px solid var(--border);transition:all .22s;}
+.sb-brand span{color:var(--muted);}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 10px 0;}
+.sb-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:var(--rs);border:none;background:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;text-align:left;transition:all .15s;font-family:'Nunito',sans-serif;margin-bottom:2px;}
+.sb-item:hover{background:var(--bg);color:var(--text);}
+.sb-item.active{background:var(--text);color:#fff;}
+.sb-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
+.sb-label{flex:1;transition:opacity .15s;}
+.sb-divider{height:1px;background:var(--border);margin:10px 4px;}
+.sb-lm{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:var(--rs);color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;transition:all .15s;margin-bottom:2px;}
+.sb-lm:hover{background:var(--bg);color:var(--text);}
+.sb-settings{margin-bottom:4px;}
+.sb-sync{padding:12px 10px 16px;border-top:1.5px solid var(--border);transition:all .22s;}
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:52px;background:var(--surface);border-bottom:1.5px solid var(--border);z-index:60;align-items:center;padding:0 14px;gap:12px;}
+.mob-menu-btn{border:none;background:none;font-size:20px;cursor:pointer;color:var(--text);padding:4px;}
+.mob-brand{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;flex:1;}
+.mob-sync{padding:6px 10px;border-radius:var(--rs);border:1.5px solid var(--border);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:49;}
+@media(max-width:680px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-overlay.open{display:block;}
+  .mobile-topbar{display:flex;}
+  .main-content{margin-left:0;padding-top:52px;}
+  .page{padding:16px;}
+}
+
+/* ── JOB APPLICATIONS ───────────────────────────────── */
+.jobs-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
+.jobs-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;margin-bottom:3px;}
+.jobs-sub{font-size:13px;color:var(--muted);}
+.btn-add-job{padding:9px 18px;border-radius:var(--rs);border:none;background:var(--text);color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-add-job:hover{opacity:.85;}
+.jobs-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.job-stat{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 16px;flex:1;min-width:100px;}
+.job-stat-num{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--text);}
+.job-stat-label{font-size:11px;font-weight:700;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em;}
+.jobs-table-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;overflow-x:auto;}
+.jobs-table{width:100%;border-collapse:collapse;min-width:700px;}
+.jobs-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1.5px solid var(--border);background:var(--bg);white-space:nowrap;}
+.jobs-table td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top;}
+.jobs-table tr:last-child td{border-bottom:none;}
+.jobs-table tr:hover td{background:var(--bg);}
+.jt-company{font-weight:700;color:var(--text);}
+.jt-position{color:var(--muted);font-size:12px;margin-top:2px;}
+.jt-date{color:var(--muted);font-size:12px;white-space:nowrap;}
+.jt-progress{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;background:var(--bg);color:var(--muted);border:1px solid var(--border);white-space:nowrap;}
+.jt-status{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+.status-inprogress{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;}
+.status-accepted{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;}
+.status-rejected{background:#FEF2F2;color:#7F1D1D;border:1px solid #FECACA;}
+.status-ghosted{background:#F5F3FF;color:#4C1D95;border:1px solid #DDD6FE;}
+.status-withdrawn{background:#F9FAFB;color:#374151;border:1px solid #E5E7EB;}
+.jt-reqs{font-size:12px;color:var(--muted);max-width:180px;line-height:1.5;}
+.jt-links a{display:inline-block;font-size:11px;font-weight:700;color:var(--text);text-decoration:none;padding:2px 8px;border-radius:6px;border:1px solid var(--border);margin:2px 2px 2px 0;transition:all .15s;}
+.jt-links a:hover{background:var(--text);color:#fff;border-color:var(--text);}
+.jt-actions{display:flex;gap:5px;}
+.jt-btn{padding:3px 9px;border-radius:6px;border:1px solid var(--border);background:none;font-size:11px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;white-space:nowrap;}
+.jt-btn:hover{border-color:var(--text);}
+.jt-btn.del{color:#EF4444;}.jt-btn.del:hover{border-color:#EF4444;background:#FEF2F2;}
+.jobs-empty{padding:48px 20px;text-align:center;}
+.jobs-empty-icon{font-size:36px;margin-bottom:12px;}
+.jobs-empty-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px;}
+.jobs-empty-sub{font-size:13px;color:var(--muted);}
+
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-brand">🎀 <span>Celine</span>'s Planner</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('home',this)">🏠 Home</button>
-    <button class="nav-tab" onclick="showPage('schedule',this)">📅 Schedule</button>
-    <button class="nav-tab" onclick="showPage('ps',this)">💼 Remote Job</button>
-    <button class="nav-tab" onclick="showPage('journal',this)">📝 Journal</button>
-    <button class="nav-tab" onclick="showPage('progress',this)">📊 Progress</button>
-    <button class="nav-tab more-tab hidden-tab" onclick="showPage('language',this)">🗣️ Language</button>
-    <button class="nav-tab more-tab hidden-tab" onclick="showPage('brainstorm',this)">🧠 Brainstorm</button>
-    <button class="nav-tab" onclick="toggleMoreTabs(this)" id="moreTabBtn">··· More</button>
-    <button class="nav-tab more-tab hidden-tab" onclick="showPage('settings',this)">⚙️</button>
-  </div>
-  <div class="nav-right">
-    <a href="https://celineputr.github.io/lead-manager/" target="_blank" class="btn-lm">📋 Lead Manager</a>
+<!-- SIDEBAR + LAYOUT WRAPPER -->
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <button class="sb-toggle" id="sbToggle" onclick="collapseSidebar()" title="Collapse sidebar">‹</button>
+  <div class="sb-brand">🎀 <span>Celine</span></div>
+  <nav class="sb-nav">
+    <button class="sb-item active" onclick="showPage('home',this)"><span class="sb-icon">🏠</span><span class="sb-label">Home</span></button>
+    <button class="sb-item" onclick="showPage('schedule',this)"><span class="sb-icon">📅</span><span class="sb-label">Schedule</span></button>
+    <button class="sb-item" onclick="showPage('ps',this)"><span class="sb-icon">💼</span><span class="sb-label">Remote Job</span></button>
+    <button class="sb-item" onclick="showPage('journal',this)"><span class="sb-icon">📝</span><span class="sb-label">Journal</span></button>
+    <button class="sb-item" onclick="showPage('progress',this)"><span class="sb-icon">📊</span><span class="sb-label">Progress</span></button>
+    <button class="sb-item" onclick="showPage('language',this)"><span class="sb-icon">🗣️</span><span class="sb-label">Language</span></button>
+    <button class="sb-item" onclick="showPage('brainstorm',this)"><span class="sb-icon">🧠</span><span class="sb-label">Brainstorm</span></button>
+    <button class="sb-item" onclick="showPage('jobs',this)"><span class="sb-icon">📩</span><span class="sb-label">Job Applications</span></button>
+    <div class="sb-divider"></div>
+    <a href="https://celineputr.github.io/lead-manager/" target="_blank" class="sb-lm"><span class="sb-icon">📋</span><span class="sb-label">Lead Manager</span></a>
+    <button class="sb-item sb-settings" onclick="showPage('settings',this)"><span class="sb-icon">⚙️</span><span class="sb-label">Settings</span></button>
+  </nav>
+  <div class="sb-sync">
     <button class="btn-sync" onclick="syncAll()"><span class="sync-dot" id="syncDot"></span>Sync</button>
   </div>
-</nav>
+</aside>
+
+<!-- MOBILE TOPBAR -->
+<div class="mobile-topbar">
+  <button class="mob-menu-btn" onclick="toggleSidebar()">☰</button>
+  <div class="mob-brand">🎀 Celine's Planner</div>
+  <button class="btn-sync mob-sync" onclick="syncAll()"><span class="sync-dot" id="syncDotMob"></span></button>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -801,6 +893,81 @@ nav{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 
   <div id="progTab-badges" style="display:none;">
     <div class="ach-summary" id="achSummary"></div>
     <div class="ach-grid" id="achGrid"></div>
+  </div>
+</div>
+
+<!-- JOB APPLICATIONS -->
+<div class="page" id="page-jobs">
+  <div class="jobs-header">
+    <div>
+      <h2 class="jobs-title">📩 Job Applications</h2>
+      <div class="jobs-sub">Track every application in one place</div>
+    </div>
+    <button class="btn-add-job" onclick="openAddJob()">+ Add Application</button>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="jobs-stats" id="jobsStats"></div>
+
+  <!-- Table -->
+  <div class="jobs-table-wrap">
+    <table class="jobs-table" id="jobsTable">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Position</th>
+          <th>Date Applied</th>
+          <th>Progress</th>
+          <th>Status</th>
+          <th>Requirements</th>
+          <th>Links</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="jobsTableBody"></tbody>
+    </table>
+    <div class="jobs-empty" id="jobsEmpty">
+      <div class="jobs-empty-icon">📩</div>
+      <div class="jobs-empty-title">No applications yet</div>
+      <div class="jobs-empty-sub">Tap "+ Add Application" to track your first one</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT JOB MODAL -->
+<div class="modal-overlay" id="jobModal">
+  <div class="modal" style="max-width:520px;">
+    <h3 id="jobModalTitle">Add Application</h3>
+    <div class="field"><label>Company Name *</label><input type="text" id="jmCompany" placeholder="e.g. Google, Tokopedia..."/></div>
+    <div class="field"><label>Position</label><input type="text" id="jmPosition" placeholder="e.g. Brand Officer, EdTech Specialist..."/></div>
+    <div class="field"><label>Job Listing URL</label><input type="url" id="jmLink" placeholder="https://..."/></div>
+    <div class="field"><label>CV / File (name or link)</label><input type="text" id="jmCv" placeholder="CV_Celine_2025.pdf or Google Drive link..."/></div>
+    <div class="field"><label>Date Applied</label><input type="date" id="jmDate"/></div>
+    <div class="field"><label>Progress</label>
+      <select id="jmProgress">
+        <option value="Applied">Applied</option>
+        <option value="Admin Selection">Admin Selection</option>
+        <option value="HR Interview">HR Interview</option>
+        <option value="Test / Assessment">Test / Assessment</option>
+        <option value="User Interview">User Interview</option>
+        <option value="Offering">Offering</option>
+        <option value="Waiting">Waiting for response</option>
+      </select>
+    </div>
+    <div class="field"><label>Status</label>
+      <select id="jmStatus">
+        <option value="In Progress">🔄 In Progress</option>
+        <option value="Accepted">✅ Accepted</option>
+        <option value="Rejected">❌ Rejected</option>
+        <option value="Ghosted">👻 Ghosted</option>
+        <option value="Withdrawn">🚫 Withdrawn</option>
+      </select>
+    </div>
+    <div class="field"><label>Requirements / Notes</label><textarea id="jmReqs" rows="3" placeholder="Skills needed, experience required, notes..."></textarea></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeJobModal()">Cancel</button>
+      <button class="btn-ok" onclick="saveJob()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -2005,6 +2172,24 @@ function saveJournalMini() {
 }
 let psDate = new Date();
 
+// ─── SIDEBAR ─────────────────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
+function collapseSidebar() {
+  const sb = document.getElementById('sidebar');
+  const main = document.querySelector('.main-content');
+  const btn = document.getElementById('sbToggle');
+  const collapsed = sb.classList.toggle('collapsed');
+  main.classList.toggle('collapsed', collapsed);
+  btn.textContent = collapsed ? '›' : '‹';
+  btn.title = collapsed ? 'Expand sidebar' : 'Collapse sidebar';
+  // Save preference
+  localStorage.setItem('sb_collapsed', collapsed ? '1' : '0');
+}
+
 function showProgTab(name, btn) {
   ['streak','recap','badges'].forEach(t => {
     const el = document.getElementById('progTab-'+t);
@@ -2017,19 +2202,15 @@ function showProgTab(name, btn) {
   if (name==='streak') { renderCorePicker(); renderTodayCheckin(); renderChain(); }
 }
 
-function navTo(page) {
-  const btn = Array.from(document.querySelectorAll('.nav-tab')).find(b => {
-    const oc = b.getAttribute('onclick') || '';
-    return oc.includes("'" + page + "'");
-  });
-  showPage(page, btn);
-}
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(t=>t.classList.remove('active'));
   const pg = document.getElementById('page-'+name);
   if (pg) pg.classList.add('active');
   if (btn) btn.classList.add('active');
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
   if(name==='home') renderHome();
   if(name==='schedule') renderSchedule();
   if(name==='ps') renderPsPage();
@@ -2037,11 +2218,17 @@ function showPage(name, btn) {
   if(name==='progress') showProgTab('streak', document.getElementById('ptab-streak'));
   if(name==='language') { activeLang='en'; activeLangWeek=1; document.querySelectorAll('.lang-tab')[0].classList.add('active'); renderLang(); }
   if(name==='brainstorm') renderBrainstorm();
-  if(name==='settings') document.getElementById('gasUrl').value = st.gasUrl||'';
+  if(name==='jobs') renderJobs();
+  if(name==='settings') { const el=document.getElementById('gasUrl'); if(el) el.value=st.gasUrl||''; }
 }
+
+function navTo(page) {
+  const btn = document.querySelector(`.sb-item[onclick*="'${page}'"]`);
+  showPage(page, btn);
+}
+
 function showPageById(name) {
-  const btn = Array.from(document.querySelectorAll('.nav-tab')).find(b=>b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'"));
-  if(btn) showPage(name, btn);
+  navTo(name);
 }
 function showToast(msg) {
   const t=document.getElementById('toast'); t.textContent=msg;
@@ -2637,8 +2824,131 @@ function savePsNote() {
   m.classList.add('show'); setTimeout(()=>m.classList.remove('show'), 2000);
 }
 
+// ─── JOB APPLICATIONS ────────────────────────────────────
+let editJobId = null;
+
+function getJobs() { return st.jobs || []; }
+
+function renderJobs() {
+  const jobs = getJobs();
+  const tbody = document.getElementById('jobsTableBody');
+  const emptyEl = document.getElementById('jobsEmpty');
+  const statsEl = document.getElementById('jobsStats');
+  if (!tbody) return;
+
+  // Stats
+  const total = jobs.length;
+  const accepted = jobs.filter(j=>j.status==='Accepted').length;
+  const inprog = jobs.filter(j=>j.status==='In Progress').length;
+  const rejected = jobs.filter(j=>j.status==='Rejected').length;
+  if (statsEl) statsEl.innerHTML = [
+    ['Total', total, ''],
+    ['In Progress', inprog, ''],
+    ['Accepted', accepted, ''],
+    ['Rejected', rejected, ''],
+  ].map(([l,n])=>`<div class="job-stat"><div class="job-stat-num">${n}</div><div class="job-stat-label">${l}</div></div>`).join('');
+
+  if (!jobs.length) {
+    tbody.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = 'block';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  const statusClass = {
+    'In Progress':'status-inprogress','Accepted':'status-accepted',
+    'Rejected':'status-rejected','Ghosted':'status-ghosted','Withdrawn':'status-withdrawn'
+  };
+
+  tbody.innerHTML = jobs.map((j, i) => `
+    <tr>
+      <td>
+        <div class="jt-company">${escHtml(j.company||'')}</div>
+        <div class="jt-position">${escHtml(j.position||'')}</div>
+      </td>
+      <td class="jt-date">${j.date||'—'}</td>
+      <td><span class="jt-progress">${escHtml(j.progress||'Applied')}</span></td>
+      <td><span class="jt-status ${statusClass[j.status]||'status-inprogress'}">${j.status||'In Progress'}</span></td>
+      <td class="jt-reqs">${escHtml(j.reqs||'').replace(/\n/g,'<br>')}</td>
+      <td class="jt-links">
+        ${j.link ? `<a href="${escHtml(j.link)}" target="_blank">🔗 Job Post</a>` : ''}
+        ${j.cv ? (j.cv.startsWith('http') ? `<a href="${escHtml(j.cv)}" target="_blank">📄 CV</a>` : `<span class="jt-progress">📄 ${escHtml(j.cv)}</span>`) : ''}
+      </td>
+      <td>
+        <div class="jt-actions">
+          <button class="jt-btn" onclick="editJob(${i})">Edit</button>
+          <button class="jt-btn del" onclick="deleteJob(${i})">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function openAddJob() {
+  editJobId = null;
+  document.getElementById('jobModalTitle').textContent = 'Add Application';
+  document.getElementById('jmCompany').value = '';
+  document.getElementById('jmPosition').value = '';
+  document.getElementById('jmLink').value = '';
+  document.getElementById('jmCv').value = '';
+  document.getElementById('jmDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('jmProgress').value = 'Applied';
+  document.getElementById('jmStatus').value = 'In Progress';
+  document.getElementById('jmReqs').value = '';
+  document.getElementById('jobModal').classList.add('open');
+}
+
+function editJob(i) {
+  editJobId = i;
+  const j = getJobs()[i];
+  document.getElementById('jobModalTitle').textContent = 'Edit Application';
+  document.getElementById('jmCompany').value = j.company||'';
+  document.getElementById('jmPosition').value = j.position||'';
+  document.getElementById('jmLink').value = j.link||'';
+  document.getElementById('jmCv').value = j.cv||'';
+  document.getElementById('jmDate').value = j.date||'';
+  document.getElementById('jmProgress').value = j.progress||'Applied';
+  document.getElementById('jmStatus').value = j.status||'In Progress';
+  document.getElementById('jmReqs').value = j.reqs||'';
+  document.getElementById('jobModal').classList.add('open');
+}
+
+function closeJobModal() { document.getElementById('jobModal').classList.remove('open'); }
+
+function saveJob() {
+  const company = document.getElementById('jmCompany').value.trim();
+  if (!company) { showToast('Company name is required!'); return; }
+  const job = {
+    company, position: document.getElementById('jmPosition').value.trim(),
+    link: document.getElementById('jmLink').value.trim(),
+    cv: document.getElementById('jmCv').value.trim(),
+    date: document.getElementById('jmDate').value,
+    progress: document.getElementById('jmProgress').value,
+    status: document.getElementById('jmStatus').value,
+    reqs: document.getElementById('jmReqs').value.trim(),
+    updatedAt: new Date().toISOString(),
+  };
+  if (!st.jobs) st.jobs = [];
+  if (editJobId !== null) st.jobs[editJobId] = job;
+  else st.jobs.unshift(job);
+  save(); closeJobModal(); renderJobs();
+  showToast(editJobId !== null ? '✓ Application updated!' : '✓ Application added!');
+}
+
+function deleteJob(i) {
+  if (!confirm('Delete this application?')) return;
+  st.jobs.splice(i, 1); save(); renderJobs();
+  showToast('Deleted.');
+}
+
 // ─── INIT ────────────────────────────────────────────────
 document.getElementById('gasUrl').value = st.gasUrl||'';
+// Restore sidebar collapsed state
+if (localStorage.getItem('sb_collapsed') === '1') {
+  document.getElementById('sidebar').classList.add('collapsed');
+  document.querySelector('.main-content').classList.add('collapsed');
+  const btn = document.getElementById('sbToggle');
+  if (btn) { btn.textContent = '›'; btn.title = 'Expand sidebar'; }
+}
 renderHome();
 renderLang();
 requestNotifPermission();
@@ -2646,5 +2956,7 @@ checkReminders();
 // Check achievements on load
 setTimeout(renderAchievements, 500);
 </script>
+</main><!-- end main-content -->
+</div><!-- end app-layout -->
 </body>
 </html>
