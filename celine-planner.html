@@ -555,7 +555,17 @@ h1,h2,h3,h4{font-family:'Nunito',sans-serif;}
 }
 
 
-/* ── TIME BLOCK SCHEDULE ───────────────────────────────── */
+/* CATEGORY MANAGER */
+.cat-list{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;max-height:280px;overflow-y:auto;}
+.cat-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg);}
+.cat-swatch{width:18px;height:18px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid rgba(0,0,0,.08);}
+.cat-row-name{flex:1;font-size:13px;font-weight:600;}
+.cat-row-del{padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:none;font-size:11px;color:var(--muted);cursor:pointer;transition:all .15s;}
+.cat-row-del:hover{color:#EF4444;border-color:#EF4444;}
+.cat-add-row{display:flex;gap:8px;align-items:center;}
+.cat-add-input{flex:1;border:1.5px solid var(--border);border-radius:var(--rs);padding:7px 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
+.cat-add-input:focus{outline:none;border-color:var(--text);}
+ ───────────────────────────────── */
 .sched-copy-bar{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:1.5px dashed var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;gap:10px;flex-wrap:wrap;}
 .sched-copy-msg{font-size:13px;color:var(--muted);}
 .sched-copy-btn{padding:6px 14px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;white-space:nowrap;}
@@ -1020,29 +1030,35 @@ h1,h2,h3,h4{font-family:'Nunito',sans-serif;}
 <!-- ADD/EDIT BLOCK MODAL -->
 <div class="modal-overlay" id="blockModal">
   <div class="modal">
-    <h3 id="modalTitle">Add schedule block</h3>
-    <div class="field"><label>Time (HH:MM)</label><input type="time" id="mTime"/></div>
-    <div class="field"><label>Activity name</label><input type="text" id="mName" placeholder="Contoh: Exercise pagi"/></div>
-    <div class="field"><label>Keterangan (opsional)</label><input type="text" id="mSub" placeholder="Detail singkat..."/></div>
-    <div class="field"><label>Durasi (opsional)</label><input type="text" id="mBadge" placeholder="Contoh: 30 mnt"/></div>
+    <h3 id="modalTitle">Add activity</h3>
+    <div class="field"><label>Activity name *</label><input type="text" id="mName" placeholder="e.g. Morning prayer, Exercise..."/></div>
+    <div class="field"><label>Time (optional)</label><input type="time" id="mTime"/></div>
+    <div class="field"><label>Notes (optional)</label><input type="text" id="mSub" placeholder="Any detail..."/></div>
     <div class="field"><label>Category</label>
-      <select id="mCat">
-        <option value="prayer">🟡 Prayer / Spiritual</option>
-        <option value="work">🔵 Remote Work</option>
-        <option value="ps-threads">🟢 PS – Threads</option>
-        <option value="ps-wa">🟩 PS – WA / Reminder</option>
-        <option value="lang">🟣 Language Study</option>
-        <option value="sport">🟠 Exercise</option>
-        <option value="port">🩵 Portfolio / Edtech</option>
-        <option value="job">🔴 Job Applications</option>
-        <option value="meal">🩷 Meals / Rest</option>
-        <option value="rest">⚫ Free / Sleep</option>
-        <option value="prepare">🟤 Content Prep</option>
-      </select>
+      <select id="mCat"></select>
+      <div style="margin-top:6px;">
+        <button type="button" onclick="openCatManager()" style="font-size:11px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;font-family:'Nunito',sans-serif;">⚙️ Manage categories</button>
+      </div>
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-ok" onclick="saveBlock()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MANAGER MODAL -->
+<div class="modal-overlay" id="catModal">
+  <div class="modal" style="max-width:460px;">
+    <h3>⚙️ Manage Categories</h3>
+    <div class="cat-list" id="catList"></div>
+    <div class="cat-add-row">
+      <input type="color" id="catColorPick" value="#8B5CF6" style="width:36px;height:34px;border:1.5px solid var(--border);border-radius:var(--rs);cursor:pointer;padding:2px;background:none;"/>
+      <input type="text" id="catNewName" placeholder="Category name..." class="cat-add-input"/>
+      <button class="btn-ok" onclick="addCategory()" style="white-space:nowrap;">+ Add</button>
+    </div>
+    <div class="modal-btns" style="margin-top:14px;">
+      <button class="btn-cancel" onclick="closeCatModal()">Done</button>
     </div>
   </div>
 </div>
@@ -1424,6 +1440,100 @@ const CURRICULUM = {
 // ─── SCHEDULE FUNCTIONS ───────────────────────────────────
 const CAT_DOT = {prayer:'#1A1A18',work:'#7A7670','ps-threads':'#1A1A18','ps-wa':'#1A1A18',lang:'#4A4844',sport:'#9A9894',port:'#4A4844',job:'#6A6864',meal:'#BABAB8',rest:'#D4D2CF',prepare:'#1A1A18'};
 
+// ─── CATEGORIES ──────────────────────────────────────────
+const DEFAULT_CATS = [
+  {id:'prayer',  name:'Prayer / Spiritual',  color:'#F59E0B'},
+  {id:'work',    name:'Remote Work',          color:'#3B82F6'},
+  {id:'ps-threads', name:'PS – Threads',     color:'#10B981'},
+  {id:'ps-wa',   name:'PS – WA / Reminder',  color:'#22C55E'},
+  {id:'lang',    name:'Language Study',       color:'#8B5CF6'},
+  {id:'sport',   name:'Exercise',             color:'#F97316'},
+  {id:'port',    name:'Portfolio / Edtech',   color:'#14B8A6'},
+  {id:'job',     name:'Job Applications',     color:'#EF4444'},
+  {id:'meal',    name:'Meals / Rest',         color:'#EC4899'},
+  {id:'rest',    name:'Free / Sleep',         color:'#6B7280'},
+  {id:'prepare', name:'Content Prep',         color:'#D97706'},
+];
+
+function getCategories() {
+  if (!st.categories || !st.categories.length) {
+    st.categories = JSON.parse(JSON.stringify(DEFAULT_CATS));
+    save();
+  }
+  return st.categories;
+}
+
+function populateCatSelect(selectedId) {
+  const sel = document.getElementById('mCat');
+  if (!sel) return;
+  const cats = getCategories();
+  sel.innerHTML = cats.map(c =>
+    `<option value="${c.id}" ${c.id===selectedId?'selected':''}>${colorDot(c.color)} ${c.name}</option>`
+  ).join('');
+}
+
+function colorDot(hex) {
+  // Return a unicode circle approximation using the color
+  const circles = {'#F59E0B':'🟡','#3B82F6':'🔵','#10B981':'🟢','#22C55E':'🟢','#8B5CF6':'🟣','#F97316':'🟠','#14B8A6':'🩵','#EF4444':'🔴','#EC4899':'🩷','#6B7280':'⚫','#D97706':'🟤'};
+  return circles[hex] || '⚪';
+}
+
+function getCatById(id) {
+  return getCategories().find(c=>c.id===id) || {name:id, color:'#6B7280'};
+}
+
+function openCatManager() {
+  renderCatList();
+  document.getElementById('catModal').classList.add('open');
+}
+function closeCatModal() {
+  document.getElementById('catModal').classList.remove('open');
+  // Refresh select in block modal
+  const sel = document.getElementById('mCat');
+  if (sel) populateCatSelect(sel.value);
+}
+
+function renderCatList() {
+  const cats = getCategories();
+  const el = document.getElementById('catList');
+  if (!el) return;
+  el.innerHTML = '';
+  cats.forEach((cat, i) => {
+    const row = document.createElement('div'); row.className = 'cat-row';
+    // Color swatch (click to change color)
+    const swatch = document.createElement('input');
+    swatch.type = 'color'; swatch.className = 'cat-swatch';
+    swatch.value = cat.color;
+    swatch.title = 'Change color';
+    swatch.oninput = (e) => { cats[i].color = e.target.value; st.categories = cats; save(); };
+    // Name
+    const nm = document.createElement('div'); nm.className = 'cat-row-name'; nm.textContent = cat.name;
+    // Delete (only if not last one)
+    const del = document.createElement('button'); del.className = 'cat-row-del'; del.textContent = '×';
+    del.title = 'Delete category';
+    del.onclick = () => {
+      if (cats.length <= 1) { showToast('Need at least 1 category!'); return; }
+      if (!confirm(`Delete "${cat.name}"?`)) return;
+      cats.splice(i, 1); st.categories = cats; save(); renderCatList();
+    };
+    row.appendChild(swatch); row.appendChild(nm); row.appendChild(del);
+    el.appendChild(row);
+  });
+}
+
+function addCategory() {
+  const name = (document.getElementById('catNewName').value || '').trim();
+  const color = document.getElementById('catColorPick').value;
+  if (!name) { showToast('Enter a category name!'); return; }
+  const cats = getCategories();
+  const id = 'cat_' + Date.now().toString(36);
+  cats.push({ id, name, color });
+  st.categories = cats; save();
+  document.getElementById('catNewName').value = '';
+  renderCatList();
+  showToast('✓ Category added!');
+}
+
 // ─── SCHEDULE — TIME BLOCK SYSTEM ────────────────────────
 const TB_BLOCKS = [
   { id:'morning',   icon:'🌅', name:'Morning',   defaultTime:'05:00–12:00' },
@@ -1527,6 +1637,12 @@ function renderSchedule() {
         chk.onclick = (e) => { e.stopPropagation(); data.checked[ck]=!data.checked[ck]; st['tbsched_'+dk(schedDate)]=data; save(); renderSchedule(); };
 
         const timeEl = document.createElement('div'); timeEl.className = 'tb-item-time'; timeEl.textContent = item.time||'';
+
+        // Category color dot
+        const cat = getCatById(item.catId);
+        const catDot = document.createElement('div');
+        catDot.style.cssText = `width:8px;height:8px;border-radius:50%;background:${cat.color};flex-shrink:0;`;
+
         const body = document.createElement('div'); body.style.flex='1';
         const nameEl = document.createElement('div'); nameEl.className = 'tb-item-name'; nameEl.textContent = item.name;
         body.appendChild(nameEl);
@@ -1539,7 +1655,7 @@ function renderSchedule() {
         delBtn.onclick = (e) => { e.stopPropagation(); data.items[block.id].splice(i,1); delete data.checked[ck]; st['tbsched_'+dk(schedDate)]=data; save(); renderSchedule(); };
         acts.appendChild(editBtn); acts.appendChild(delBtn);
 
-        row.appendChild(chk); row.appendChild(timeEl); row.appendChild(body); row.appendChild(acts);
+        row.appendChild(chk); row.appendChild(timeEl); row.appendChild(catDot); row.appendChild(body); row.appendChild(acts);
         itemsEl.appendChild(row);
       });
     }
@@ -1553,6 +1669,7 @@ function openAddItem(blockId) {
   document.getElementById('mName').value = '';
   document.getElementById('mTime').value = '';
   document.getElementById('mSub').value = '';
+  populateCatSelect('sport');
   document.getElementById('blockModal').classList.add('open');
 }
 
@@ -1563,6 +1680,7 @@ function openEditItem(blockId, idx) {
   document.getElementById('mName').value = item.name || '';
   document.getElementById('mTime').value = item.time || '';
   document.getElementById('mSub').value = item.note || '';
+  populateCatSelect(item.catId || 'sport');
   document.getElementById('blockModal').classList.add('open');
 }
 
@@ -1575,15 +1693,17 @@ function saveBlock() {
   const name = document.getElementById('mName').value.trim();
   if (!name) { showToast('Activity name is required!'); return; }
   const data = getSchedData();
+  const catId = (document.getElementById('mCat')||{}).value || 'rest';
   const item = {
     id: Date.now().toString(36),
     name,
     time: document.getElementById('mTime').value,
     note: document.getElementById('mSub').value.trim(),
+    catId,
   };
   if (!data.items[editItemBlock]) data.items[editItemBlock] = [];
   if (editItemIdx >= 0) {
-    item.id = data.items[editItemBlock][editItemIdx].id; // keep original id for checked state
+    item.id = data.items[editItemBlock][editItemIdx].id;
     data.items[editItemBlock][editItemIdx] = item;
   } else {
     data.items[editItemBlock].push(item);
